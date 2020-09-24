@@ -6,7 +6,26 @@ Created on 2020-09-24 16:45
 @author: a002028
 
 """
-# from
+from config import Settings
+
+
+class App:
+    """
+    """
+    def __init__(self):
+        self.settings = Settings()
+
+    def read_list(self, *args, **kwargs):
+        """"""
+        pass
+
+    def write_list(self, *args, **kwargs):
+        """"""
+        pass
+
+
+
+
 
 
 class ListBase(dict):
