@@ -37,7 +37,7 @@ class App:
         reader = self.settings.load_reader(kwargs.get('reader'))
         kwargs.pop('reader')
         lst = reader.read(*args, **kwargs)
-        self.list.update_attributes(dataframe=lst,
+        self.list.update_attributes(data=lst,
                                     attributes=self.settings.attributes)
 
     def write_list(self, *args, **kwargs):

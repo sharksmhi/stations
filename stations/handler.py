@@ -60,14 +60,12 @@ class List(ListBase):
         :param args: tuple
         :param kwargs: dict
             Expects:
-                dataframe or dictionary
+                data as dataframe or dictionary
                 attributes
         :return:
         """
-        if 'dataframe' in kwargs:
-            data = kwargs.get('dataframe')
-        elif 'dictionary' in kwargs:
-            data = kwargs.get('dictionary')
+        if 'data' in kwargs:
+            data = kwargs.get('data')
         else:
             data = ()
         try:
