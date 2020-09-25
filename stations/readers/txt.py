@@ -19,7 +19,6 @@ class NumpyReaderBase(object):
     @staticmethod
     def read(*args, **kwargs):
         """
-
         :param args:
         :param kwargs:
         :return:
@@ -30,15 +29,14 @@ class NumpyReaderBase(object):
 class PandasReaderBase(object):
     """
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(PandasReaderBase, self).__init__()
 
     @staticmethod
     def read(*args, **kwargs):
         """
-
-        :param args:
-        :param kwargs:
+        :param args: tuple
+        :param kwargs: dict
         :return:
         """
         return pd.read_csv(*args, **kwargs)
@@ -53,14 +51,23 @@ class NoneReaderBase(object):
 
     @staticmethod
     def read(*args, **kwargs):
-        print('Warning! No shape was read due to unrecognizable datatype')
+        print('Warning! No data was read due to unrecognizable reader type')
+
+
+class PandasReader(PandasReaderBase):
+    """
+    Reads text / csv files
+    """
+    def __init__(self, *args, **kwargs):
+        super(PandasReader, self).__init__()
 
 
 def text_reader(reader_type, *args, **kwargs):
     """
-    :param reader_type:
-    :param args:
-    :param kwargs:
+    Dynamic text reader.
+    :param reader_type: str, decides what type of reader base to be used.
+    :param args: tuple
+    :param kwargs: dict
     :return:
     """
     if reader_type is 'pandas':
