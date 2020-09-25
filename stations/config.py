@@ -15,6 +15,7 @@ from stations.utils import generate_filepaths
 class SettingsBase(object):
     def __init__(self, *args, **kwargs):
         super(SettingsBase, self).__init__()
+        self.default_attributes = None
         self.readers = None
         self.writers = None
 
@@ -44,7 +45,6 @@ class Settings(SettingsBase):
         super(Settings, self).__init__()
         self.base_directory = os.path.dirname(os.path.realpath(__file__))
         etc_path = os.path.join(self.base_directory, 'etc')
-        self.default_attributes = None
         self._load_settings(etc_path)
 
         if 'attributes' in kwargs:
