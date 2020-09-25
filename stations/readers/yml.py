@@ -12,7 +12,7 @@ import yaml
 def yaml_reader(file_path):
     """
     :param file_path: str, path to YAML-file
-    :return:
+    :return: dictionary
     """
     with open(file_path, encoding='utf8') as fd:
         data = yaml.load(fd, Loader=yaml.FullLoader)

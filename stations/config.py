@@ -67,7 +67,7 @@ class Settings(SettingsBase):
 
     def load_reader(self, reader):
         """
-        :param reader:
+        :param reader: str
         :return:
         """
         reader_instance = self.readers[reader].get('reader')
@@ -75,7 +75,7 @@ class Settings(SettingsBase):
 
     def load_writer(self, writer):
         """
-        :param writer:
+        :param writer: str
         :return:
         """
         writer_instance = self.writers[writer].get('writer')

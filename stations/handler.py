@@ -59,6 +59,9 @@ class List(ListBase):
         """
         :param args: tuple
         :param kwargs: dict
+            Expects:
+                dataframe or dictionary
+                attributes
         :return:
         """
         if 'dataframe' in kwargs:

@@ -20,7 +20,11 @@ class App:
     def read_list(self, *args, **kwargs):
         """
         :param args: tuple
+            Expects:
+                file_path
         :param kwargs: dict
+            Expects:
+                reader
         :return:
         """
         try:
@@ -39,7 +43,12 @@ class App:
     def write_list(self, *args, **kwargs):
         """
         :param args: tuple
-        :param kwargs: dict
+        :param kwargs: dict.
+            Expects:
+                writer
+            Addition:
+                file_path
+                file_name
         :return:
         """
         try:

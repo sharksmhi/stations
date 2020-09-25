@@ -35,7 +35,6 @@ class StnRegWriter(object):
 
     def write(self, file_path, list_obj):
         """
-
         :param list_obj:
         :return:
         """

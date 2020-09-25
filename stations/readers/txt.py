@@ -36,7 +36,15 @@ class PandasReaderBase(object):
     def read(*args, **kwargs):
         """
         :param args: tuple
+            Expects:
+                file_path
         :param kwargs: dict
+            Addition:
+                header
+                sep
+                encoding
+                dtype
+                keep_default_na
         :return:
         """
         return pd.read_csv(*args, **kwargs)
