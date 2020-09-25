@@ -14,7 +14,6 @@ class StnRegWriter(object):
     """
     """
     def __init__(self, *args, **kwargs):
-        super().__init__()
         self.header = kwargs.get('header')
         self.meta_header = kwargs.get('meta_header')
         self.mapping = kwargs.get('attribute_mapping')
@@ -35,7 +34,8 @@ class StnRegWriter(object):
 
     def write(self, file_path, list_obj):
         """
-        :param list_obj:
+        :param file_path: str
+        :param list_obj: stations.handler.List
         :return:
         """
         mf = self.get_metaframe()
@@ -54,14 +54,14 @@ class StnRegWriter(object):
 
     def _write(self, dictionary, path_to_new_file):
         """
-        :param dictionary:
-        :param path_to_new_file:
+        :param dictionary: dictionary
+        :param path_to_new_file: str
         :return:
         """
         print('Saving stations to: %s' % path_to_new_file)
         xls = XlsxWriter(file_path=path_to_new_file)
         xls.write_multiple_sheets(dictionary)
-        print('done')
+        print('Writer done!')
 
 
 class XlsxWriter:
@@ -81,7 +81,7 @@ class XlsxWriter:
 
     def write_multiple_sheets(self, dictionary):
         """
-        :param dictionary:
+        :param dictionary: dictionary
         :return:
         """
         for sheet_name, frame in dictionary.items():

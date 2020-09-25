@@ -13,7 +13,7 @@ class ListBase(object):
     """
     """
     def __init__(self):
-        super().__init__()
+        super(ListBase, self).__init__()
         self.boolean = True
 
     def __setattr__(self, name, value):
@@ -41,8 +41,8 @@ class ListBase(object):
 class List(ListBase):
     """
     """
-    def __init__(self, *args, **kwargs):
-        super().__init__()
+    def __init__(self):
+        super(List, self).__init__()
 
     def get(self, item):
         """
@@ -52,7 +52,7 @@ class List(ListBase):
         if item in self.__dict__.keys():
             return self.__getattribute__(item)
         else:
-            print('Warning! No list attribute named: %s' % item)
+            print('Warning! Can´t find attribute named: %s' % item)
             return None
 
     def update_attributes(self, *args, **kwargs):
