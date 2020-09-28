@@ -9,15 +9,15 @@ Created on 2020-09-24 16:16
 import os
 from pathlib import Path
 from stations.readers.yml import yaml_reader
-from stations.utils import generate_filepaths
+from stations.utils import generate_filepaths, recursive_dict_update
 
 
 class SettingsBase(object):
     def __init__(self, *args, **kwargs):
         super(SettingsBase, self).__init__()
         self.default_attributes = None
-        self.readers = None
-        self.writers = None
+        self.readers = {}
+        self.writers = {}
 
     def __setattr__(self, name, value):
         """
@@ -26,8 +26,17 @@ class SettingsBase(object):
         :param value: any kind
         :return:
         """
-        # if anything here: do something else: delete def
-        super().__setattr__(name, value)
+        if os.path.isfile(name):
+            if isinstance(value, dict) and ('readers' in name or 'writers' in name):
+                if 'readers' in name:
+                    d = self.readers
+                else:
+                    d = self.writers
+                recursive_dict_update(d, {Path(name).stem: value})
+            else:
+                super().__setattr__(name, value)
+        else:
+            super().__setattr__(name, value)
 
     def set_attributes(self, **kwargs):
         """
@@ -61,7 +70,8 @@ class Settings(SettingsBase):
         etc_data = {}
         for path in paths:
             data = yaml_reader(path)
-            etc_data.setdefault(Path(path).stem, data)
+            # etc_data.setdefault(Path(path).stem, data)
+            etc_data.setdefault(path, data)
 
         self.set_attributes(**etc_data)
 

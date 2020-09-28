@@ -8,6 +8,7 @@ Created on 2020-09-25 16:41
 """
 import os
 from datetime import datetime
+from collections import Mapping
 
 
 def generate_filepaths(directory, pattern=''):
@@ -28,3 +29,18 @@ def get_now_time(fmt='%Y-%m-%d %H:%M:%S'):
     :return:
     """
     return datetime.now().strftime(fmt)
+
+
+def recursive_dict_update(d, u):
+    """ Recursive dictionary update using
+    Copied from:
+        http://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth
+        via satpy
+    """
+    for k, v in u.items():
+        if isinstance(v, Mapping):
+            r = recursive_dict_update(d.get(k, {}), v)
+            d[k] = r
+        else:
+            d[k] = u[k]
+    return d
