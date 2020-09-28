@@ -8,6 +8,7 @@ Created on 2020-09-24 16:45
 """
 from stations.config import Settings
 from stations.handler import List
+from stations.writers import WriterBase
 
 
 class App:
@@ -57,10 +58,14 @@ class App:
             print('Warning! No writer given, hence no list written')
             return
 
+        writer = self.settings.load_writer(kwargs.get('writer'))
+        kwargs.setdefault('default_file_name', writer.default_file_name)
+
         file_path = kwargs.get('file_path') or self.settings.get_export_file_path(**kwargs)
 
-        writer = self.settings.load_writer(kwargs.get('writer'))
+        print('Writing stations to: %s' % file_path)
         writer.write(file_path, self.list)
+        print('Writer done!')
 
 
 if __name__ == '__main__':
@@ -73,4 +78,6 @@ if __name__ == '__main__':
                   dtype=str,
                   keep_default_na=False)
 
-    app.write_list(writer='stnreg')
+    app.write_list(writer='map')
+
+    # app.write_list(writer='stnreg')

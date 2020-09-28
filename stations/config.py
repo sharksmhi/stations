@@ -21,7 +21,8 @@ class SettingsBase(object):
 
     def __setattr__(self, name, value):
         """
-        Defines the setattr for object self
+        Defines the setattr for object self.
+        Special management of readers and writers.
         :param name: str
         :param value: any kind
         :return:
@@ -34,7 +35,7 @@ class SettingsBase(object):
                     d = self.writers
                 recursive_dict_update(d, {Path(name).stem: value})
             else:
-                super().__setattr__(name, value)
+                super().__setattr__(Path(name).stem, value)
         else:
             super().__setattr__(name, value)
 
@@ -70,7 +71,6 @@ class Settings(SettingsBase):
         etc_data = {}
         for path in paths:
             data = yaml_reader(path)
-            # etc_data.setdefault(Path(path).stem, data)
             etc_data.setdefault(path, data)
 
         self.set_attributes(**etc_data)
@@ -96,13 +96,14 @@ class Settings(SettingsBase):
         Whenever there is not a export path given by the user, we try to export elsewhere..
         :return:
         """
-        target_path = 'C:/export_station_list'
+        target_path = 'C:/station_exports'
         if os.path.isdir('C:/'):
             if not os.path.isdir(target_path):
                 os.mkdir(target_path)
         else:
             target_path = self.base_directory
-        file_name = kwargs.get('file_name') or 'station_export.xlsx'
+
+        file_name = kwargs.get('file_name') or kwargs.get('default_file_name')
 
         return os.path.join(target_path, file_name)
 

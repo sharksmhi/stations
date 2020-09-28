@@ -8,29 +8,16 @@ Created on 2020-09-25 13:28
 """
 import pandas as pd
 from stations.utils import get_now_time
+from stations.writers.writer import WriterBase
 
 
-class StnRegWriter(object):
+class StnRegWriter(WriterBase):
     """
     """
     def __init__(self, *args, **kwargs):
-        self.header = kwargs.get('header')
-        self.meta_header = kwargs.get('meta_header')
-        self.mapping = kwargs.get('attribute_mapping')
-        self.constants = kwargs.get('attribute_constants')
-
-    def get_metaframe(self):
-        """
-        :return:
-        """
-        mf = pd.DataFrame(columns=self.meta_header, index=[0])
-        for col in self.meta_header:
-            if col == 'Datum':
-                mf[col] = get_now_time()
-            else:
-                mf[col] = self.constants.get(col) or ''
-
-        return mf
+        super(StnRegWriter, self).__init__()
+        for key, item in kwargs.items():
+            setattr(self, key, item)
 
     def write(self, file_path, list_obj):
         """
@@ -42,11 +29,11 @@ class StnRegWriter(object):
         df = pd.DataFrame(columns=self.header, index=[])
 
         for col in self.header:
-            lst_key = self.mapping.get(col)
+            lst_key = self.attribute_mapping.get(col)
             if lst_key and hasattr(list_obj, lst_key):
                 df[col] = list_obj.get(lst_key)
             else:
-                df[col] = self.constants.get(col) or ''
+                df[col] = self.attribute_constants.get(col) or ''
 
         self._write({'Provplatser': df,
                      'Metadata': mf},
@@ -58,10 +45,21 @@ class StnRegWriter(object):
         :param path_to_new_file: str
         :return:
         """
-        print('Saving stations to: %s' % path_to_new_file)
         xls = XlsxWriter(file_path=path_to_new_file)
         xls.write_multiple_sheets(dictionary)
-        print('Writer done!')
+
+    def get_metaframe(self):
+        """
+        :return:
+        """
+        mf = pd.DataFrame(columns=self.meta_header, index=[0])
+        for col in self.meta_header:
+            if col == 'Datum':
+                mf[col] = get_now_time()
+            else:
+                mf[col] = self.attribute_constants.get(col) or ''
+
+        return mf
 
 
 class XlsxWriter:

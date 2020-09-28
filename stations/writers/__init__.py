@@ -7,3 +7,5 @@ Created on 2020-09-24 16:27
 
 """
 from stations.writers.stnreg import StnRegWriter
+from stations.writers.map import MapWriter
+from stations.writers.writer import WriterBase

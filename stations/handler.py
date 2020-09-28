@@ -15,6 +15,7 @@ class ListBase(object):
     def __init__(self):
         super(ListBase, self).__init__()
         self.boolean = True
+        self.id = None
 
     def __setattr__(self, name, value):
         """
@@ -84,3 +85,10 @@ class List(ListBase):
         dictionary = {a: pd.Series(data[key]) for a, key in attrbs.items() if key in data}
 
         self.set_attributes(self, **dictionary)
+
+    @property
+    def length(self):
+        """
+        :return:
+        """
+        return len(self.id)

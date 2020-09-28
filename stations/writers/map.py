@@ -9,147 +9,101 @@ Created on 2020-09-28 10:44
 import folium
 from folium.plugins import MarkerCluster
 from folium.features import DivIcon
+from stations.writers.writer import WriterBase
 
 
-class Map:
+def get_html_string_format(*args):
+    s = '<b>'
+    for a in args:
+        new_line = a + ': %s<br>'
+        s += new_line
+    s += '</b>'
+    return s
+
+
+class MapWriter(WriterBase):
     """
     """
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super(MapWriter, self).__init__()
 
-        self.map = folium.Map(location=[61.75, 19.45],
-                              zoom_start=5,
-                              # tiles='cartodbdark_matter'
-                              tiles='cartodbpositron'
-                              # tiles='openstreetmap'
-                              )
+        for key, item in kwargs.items():
+            setattr(self, key, item)
 
-    def activate_layercontrol(self):
+        self.map = folium.Map(**self.map_settings)
+
+        self.html_fmt = get_html_string_format(*(self.marker_tag_attributes.get(key)
+                                                 for key in self.marker_tag_attributes))
+
+    def write(self, file_path, list_obj):
         """
+        :param file_path:
+        :param list_obj:
         :return:
         """
-        folium.LayerControl().add_to(self.map)
+        self.add_markers_as_cluster(list_obj, group_name='Group_name')
+        self._write(file_path)
 
-    def add_point_labels(self, label_dict):
+    def _write(self, file_path):
         """
-        :param label_dict:
+        :param file_path:
         :return:
         """
-        for key in label_dict:
-            marker = folium.map.Marker(label_dict[key].get('position'),
-                                       icon=DivIcon(icon_size=(150, 36),
-                                                    icon_anchor=(0, 0),
-                                                    html='<div style="font-size: 24pt">%s</div>' % label_dict[key].get('text')
-                                                    )
-                                       )
-            marker.add_to(self.map)
+        self.map.save(file_path)
 
-    def add_markers(self, df, group_name=None):
+    def add_markers_as_cluster(self, list_obj, group_name=None):
         """
 
         :param df:
         :param group_name:
         :return:
         """
-        self.check_data_content(df, group_name)
-        fg = self.get_group(group_name, add_to_map=False, return_group=True)
-        for i, row in df.iterrows():
-            html_obj = self.get_html_object(row, i)
-            popup = self.get_popup(html_obj)
-            marker = self.get_marker(row, popup)
-            marker.add_to(fg)
-        fg.add_to(self.map)
+        fg = self.get_group(name=group_name,
+                            add_to_map=True,
+                            return_group=True)
 
-    def add_markers_as_cluster(self, df, group_name=None):
-        """
-
-        :param df:
-        :param group_name:
-        :return:
-        """
-        self.check_data_content(df, group_name)
-        fg = self.get_group(group_name, add_to_map=True, return_group=True)
         mc = MarkerCluster()
-        for i, row in df.iterrows():
-            html_obj = self.get_stnreg_html_object(row)
+
+        for idx in range(list_obj.length):
+            html_obj = self.get_html_object(list_obj.get(key)[idx].replace('<or>', '; ') for key in self.marker_tag_attributes)
             popup = self.get_popup(html_obj)
-            marker = self.get_marker(row, popup)
+            marker = self.get_marker([list_obj.get('lat_dd')[idx],
+                                      list_obj.get('lon_dd')[idx]],
+                                     popup=popup,
+                                     tooltip=list_obj.get('name')[idx] or 'Click me!')
             marker.add_to(mc)
+
         mc.add_to(fg)
 
-    def get_group(self, name, show=False, add_to_map=False, return_group=True):
+    def get_group(self, **kwargs):
         """
+        :param kwargs:
         :return:
         """
-        fg = folium.FeatureGroup(name=name, show=show)
-        if add_to_map:
+        fg = folium.FeatureGroup(**kwargs)
+
+        if kwargs.get('add_to_map'):
             fg.add_to(self.map)
-        if return_group:
+
+        if kwargs.get('return_group'):
             return fg
 
-    def get_stnreg_html_object(self, data):
+    def get_html_object(self, *args):
         """
-        :param data:
-        :param i:
+        :param args:
         :return:
         """
-        synonym_string = 'Synonyms: <br>- ' + '<br>- '.join(data[self.reg_synonym_key].split('<or>'))
-
-        html_string = '<b>Station_reg_name: %s<br>' % data[self.reg_name_key] + synonym_string + \
-                      '<br><br>Latitude: %f<br>' \
-                      'Longitude: %f<br>' \
-                      'Radius: %s<br>' \
-                      'MRPOG: %s<br>' \
-                      'DTYPE: %s<br>' % (data[self.lat_key], data[self.lon_key], data[self.reg_radius_key],
-                                         data[self.reg_mprog_key], data[self.reg_dtype_key])
+        html_string = self.html_fmt % tuple(*args)
         return folium.Html(html_string, script=True)
 
-    def get_html_object(self, data, i):
+    @staticmethod
+    def get_marker(*args, **kwargs):
         """
-        :param data:
-        :param i:
+        :param args:
+        :param kwargs:
         :return:
         """
-        synonym_string = '<br>Synonyms: <br>- ' + '<br>- '.join(data[self.synonym_key].split(';'))
-        html_string = '<b>Name: %s<br>' % (data[self.name_key] + synonym_string) + \
-                      'Datatype: %s<br>' \
-                      'Latitude: %f<br>' \
-                      'Longitude: %f<br>' \
-                      'Project: %s<br>' \
-                      'Sampling Start: %s<br>' \
-                      'Sampling End: %s<br>' \
-                      'Nr visits: %s<br>' \
-                      'Comment: %s<br><br>' \
-                      'Distance to reg: %s m<br>' \
-                      'Station_reg_name: %s</b>' % (data[self.dtype_key], data[self.lat_key], data[self.lon_key], data[self.proj_key],
-                                                    data[self.smp_start_key], data[self.smp_end_key], str(data[self.nr_vis_key]), data[self.user_comnt_key],
-                                                    str(data[self.dist_key]), data[self.regname_key])
-        return folium.Html(html_string, script=True)
-
-    def get_html_object_missing_names(self, data, i):
-        """
-        :param data:
-        :param i:
-        :return:
-        """
-        html_string = '<b>Serie: %s<br>' \
-                      'List index: %i<br>' \
-                      'Latitude: %s<br>' \
-                      'Longitude: %s<br>' \
-                      'Distance to reg: %i m<br>' \
-                      'Station_reg_name: %s</b>' % (data['KEY'], i+2, data[self.lat_dm_key], data[self.lon_dm_key],
-                                                    data['DISTANCE_TO_STNREG'], data['NAME_SUGGESTION'])
-        return folium.Html(html_string, script=True)
-
-    def get_marker(self, row, popup):
-        """
-        :return:
-        """
-        return folium.Marker(
-                            [row[self.lat_key], row[self.lon_key]],
-                            popup=popup,
-                            icon=folium.Icon(color=row['color_tag'], icon=row['icon_tag']),
-                            tooltip='Click me!'
-        )
+        return folium.Marker(*args, **kwargs)
 
     @staticmethod
     def get_popup(html_obj):
@@ -159,14 +113,13 @@ class Map:
         """
         return folium.Popup(html_obj, max_width=500)
 
-    def save_map(self, name='map.html'):
-        """
-        :return:
-        """
-        self.map.save(name)
-
 
 if __name__ == '__main__':
 
-    m = Map()
-    m.save_map()
+    m = MapWriter(map_settings={'location': [61.75, 19.45],
+                                'zoom_start': 5},
+                  marker_tag_attributes={'name': 'name',
+                                         'id': 'id',
+                                         'lat_dd': 'lat_dd',
+                                         'lon_dd': 'lon_dd'})
+    m._write('map.html')

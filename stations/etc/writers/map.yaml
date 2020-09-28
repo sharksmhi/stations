@@ -1,0 +1,18 @@
+description: Export list on html-map using the folium package
+writer: !!python/name:stations.writers.map.MapWriter ''
+default_file_name: 'station_list_map.html'
+map_settings:
+    location: [61.75, 19.45]
+    zoom_start: 5
+    tiles: cartodbpositron
+marker_tag_attributes:
+    name: Station
+    id: ID
+    id_group: ID group
+    synonyms: Synonyms
+    lat_dd: Lat (DD)
+    lon_dd: Lon (DD)
+    lat_dm: Lat (DM)
+    lon_dm: Lon (DM)
+    lat_sweref99tm: Lat sweref99tm
+    lon_sweref99tm: Lon sweref99tm
