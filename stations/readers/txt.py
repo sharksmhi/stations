@@ -64,7 +64,7 @@ class NoneReaderBase(object):
 
 class PandasReader(PandasReaderBase):
     """
-    Reads text / csv files
+    Reads txt / csv files
     """
     def __init__(self, *args, **kwargs):
         super(PandasReader, self).__init__()

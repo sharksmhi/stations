@@ -8,7 +8,6 @@ Created on 2020-09-24 16:45
 """
 from stations.config import Settings
 from stations.handler import List
-from stations.writers import WriterBase
 
 
 class App:

@@ -57,13 +57,12 @@ class Settings(SettingsBase):
         etc_path = os.path.join(self.base_directory, 'etc')
         self._load_settings(etc_path)
 
-        if 'attributes' in kwargs:
-            self.attributes = kwargs.get('attributes')
-        else:
-            self.attributes = self.default_attributes
+        self.attributes = kwargs.get('attributes') or self.default_attributes
 
     def _load_settings(self, etc_path):
         """
+        Loading all .yaml files from etc directory.
+        Special handling of readers and writers (see SettingsBase.__setattr__())
         :param etc_path: str, local path to settings
         :return: Updates attributes of self
         """
@@ -77,7 +76,7 @@ class Settings(SettingsBase):
 
     def load_reader(self, reader):
         """
-        :param reader: str
+        :param reader: str, given by user
         :return:
         """
         reader_instance = self.readers[reader].get('reader')
@@ -85,7 +84,7 @@ class Settings(SettingsBase):
 
     def load_writer(self, writer):
         """
-        :param writer: str
+        :param writer: str, given by user
         :return:
         """
         writer_instance = self.writers[writer].get('writer')

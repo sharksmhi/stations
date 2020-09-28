@@ -8,7 +8,7 @@ Created on 2020-09-28 16:09
 """
 
 
-class WriterBase(object):
+class WriterBase:
     """
     """
     def __init__(self, *args, **kwargs):
