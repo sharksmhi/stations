@@ -54,7 +54,7 @@ class MapWriter(WriterBase):
     def add_markers_as_cluster(self, list_obj, group_name=None):
         """
 
-        :param df:
+        :param list_obj: stations.handler.List
         :param group_name:
         :return:
         """
@@ -64,8 +64,10 @@ class MapWriter(WriterBase):
 
         mc = MarkerCluster()
 
+        # TODO fix synonyms.replace('<or>', '; ')
+
         for idx in range(list_obj.length):
-            html_obj = self.get_html_object(list_obj.get(key)[idx].replace('<or>', '; ') for key in self.marker_tag_attributes)
+            html_obj = self.get_html_object(list_obj.get(key)[idx] for key in self.marker_tag_attributes)
             popup = self.get_popup(html_obj)
             marker = self.get_marker([list_obj.get('lat_dd')[idx],
                                       list_obj.get('lon_dd')[idx]],

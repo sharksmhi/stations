@@ -15,7 +15,7 @@ class ListBase(object):
     def __init__(self):
         super(ListBase, self).__init__()
         self.boolean = True
-        self.id = None
+        self.name = None
 
     def __setattr__(self, name, value):
         """
@@ -91,4 +91,4 @@ class List(ListBase):
         """
         :return:
         """
-        return len(self.id)
+        return len(self.name)

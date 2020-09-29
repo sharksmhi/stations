@@ -30,10 +30,9 @@ class SettingsBase(object):
         if os.path.isfile(name):
             if isinstance(value, dict) and ('readers' in name or 'writers' in name):
                 if 'readers' in name:
-                    d = self.readers
+                    recursive_dict_update(self.readers, {Path(name).stem: value})
                 else:
-                    d = self.writers
-                recursive_dict_update(d, {Path(name).stem: value})
+                    recursive_dict_update(self.writers, {Path(name).stem: value})
             else:
                 super().__setattr__(Path(name).stem, value)
         else:
