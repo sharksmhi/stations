@@ -32,8 +32,16 @@ class PandasReaderBase:
     def __init__(self, *args, **kwargs):
         super(PandasReaderBase, self).__init__()
 
-        for key, item in kwargs.items():
-            setattr(self, key, item)
+    def get(self, item):
+        """
+        :param item: str
+        :return:
+        """
+        if item in self.__dict__.keys():
+            return self.__getattribute__(item)
+        else:
+            print('Warning! Can´t find attribute: %s' % item)
+            return 'None'
 
     @staticmethod
     def read(*args, **kwargs):
@@ -71,6 +79,8 @@ class PandasReader(PandasReaderBase):
     """
     def __init__(self, *args, **kwargs):
         super(PandasReader, self).__init__()
+        for key, item in kwargs.items():
+            setattr(self, key, item)
 
 
 def text_reader(reader_type, *args, **kwargs):
