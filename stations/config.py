@@ -98,7 +98,7 @@ class Settings(SettingsBase):
         :return:
         """
         reader_instance = self.readers[reader].get('reader')
-        return reader_instance()
+        return reader_instance(**self.readers.get(reader))
 
     def load_writer(self, writer):
         """

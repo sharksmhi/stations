@@ -40,6 +40,7 @@ class App:
         kwargs.pop('reader')
         lst = reader.read(*args, **kwargs)
         self.lists.append_new_list(name=list_name,
+                                   meta=reader.get('meta'),
                                    data=lst,
                                    attributes=self.settings.attributes
                                    )
@@ -67,7 +68,8 @@ class App:
         file_path = self.settings.get_export_file_path(**kwargs)
 
         print('Writing stations to: %s' % file_path)
-        writer.write(file_path, self.lists.select(kwargs.get('list_names')))
+        writer.write(file_path, self.lists.select(kwargs.get('list_name') or
+                                                  kwargs.get('list_names')))
         print('Writer done!')
 
 
@@ -79,7 +81,7 @@ if __name__ == '__main__':
                   encoding='cp1252',
                   dtype=str,
                   keep_default_na=False,
-                  reader='text',
+                  reader='shark_master',
                   list_name='master')
 
     new_stations = {'name': ['Avan centroid', 'Vallviksfjärden centroid'],
@@ -98,7 +100,7 @@ if __name__ == '__main__':
                               data=new_stations,
                               attributes={k: k for k in list(new_stations)}
                               )
+    #
+    # app.write_list(writer='map', list_names=['master', 'new_stations'])
 
-    app.write_list(writer='map', list_names=['master'])
-
-    # app.write_list(writer='stnreg', list_name='master')
+    app.write_list(writer='stnreg', list_name='master')

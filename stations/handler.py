@@ -9,14 +9,24 @@ Created on 2020-09-25 13:43
 import pandas as pd
 
 
+class Meta(dict):
+    """
+    """
+    def __init__(self, *args, **kwargs):
+        self.args = [a for a in args]
+        for key, item in kwargs.items():
+            self.setdefault(key, item)
+
+
 class ListBase:
     """
     """
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(ListBase, self).__init__()
+        self.loaded_attributes = []
         self.boolean = True
         self.name = None
-        self.loaded_attributes = []
+        self.meta = None
 
     def __setattr__(self, name, value):
         """
@@ -26,11 +36,11 @@ class ListBase:
         :return:
         """
         # if anything here: do something else: delete def
-        self.loaded_attributes.append(name)
+        if name == 'meta' and not value:
+            value = {}
         super().__setattr__(name, value)
 
-    @staticmethod
-    def set_attributes(obj, **kwargs):
+    def set_attributes(self, obj, **kwargs):
         """
         With the possibility to add attributes to an object which is not 'self'
         :param obj: object
@@ -39,13 +49,20 @@ class ListBase:
         """
         for key, value in kwargs.items():
             setattr(obj, key, value)
+            self.loaded_attributes.append(key)
 
 
 class List(ListBase):
     """
     """
-    def __init__(self):
+    def __init__(self, **kwargs):
         super(List, self).__init__()
+        for key, item in kwargs.items():
+            if key == 'meta':
+                if not item:
+                    item = {}
+                item = Meta(**item)
+            setattr(self, key, item)
 
     def get(self, item):
         """
@@ -95,8 +112,9 @@ class List(ListBase):
         :param dictionary:
         :return:
         """
-        if 'synonyms' in dictionary:
-            dictionary['synonyms'] = dictionary['synonyms'].str.replace('')
+        for key, item in self.meta.items():
+            if key == 'synonym_separator' and 'synonyms' in dictionary:
+                dictionary['synonyms'] = dictionary['synonyms'].str.replace(item, ';')
 
     @property
     def length(self):
@@ -118,7 +136,7 @@ class MultiList(dict):
         """
         name = kwargs.get('name')
         if name:
-            self.setdefault(name, List())
+            self.setdefault(name, List(meta=kwargs.get('meta')))
             self[name].update_attributes(**kwargs)
         else:
             raise Warning('No list name given')
@@ -131,4 +149,11 @@ class MultiList(dict):
         if isinstance(list_names, list):
             return {name: self[name] for name in list_names}
         else:
+            print(list_names)
             return self[list_names]
+
+
+if __name__ == '__main__':
+    meta = Meta('hej', 'svej', hej=44, svej=55)
+    print(meta.get('hej'))
+    print(meta.args)

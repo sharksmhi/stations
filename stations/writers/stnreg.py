@@ -33,7 +33,8 @@ class StnRegWriter(WriterBase):
             if lst_key and hasattr(list_obj, lst_key):
                 df[col] = list_obj.get(lst_key)
             else:
-                df[col] = self.attribute_constants.get(col) or ''
+                value = self.attribute_constants.get(col) or ''
+                df[col] = [value] * list_obj.length
 
         self._write({'Provplatser': df,
                      'Metadata': mf},
