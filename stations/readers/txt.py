@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 
-class NumpyReaderBase(object):
+class NumpyReaderBase:
     """
     """
     def __init__(self):
@@ -26,11 +26,14 @@ class NumpyReaderBase(object):
         return np.loadtxt(*args, **kwargs)
 
 
-class PandasReaderBase(object):
+class PandasReaderBase:
     """
     """
     def __init__(self, *args, **kwargs):
         super(PandasReaderBase, self).__init__()
+
+        for key, item in kwargs.items():
+            setattr(self, key, item)
 
     @staticmethod
     def read(*args, **kwargs):
@@ -50,7 +53,7 @@ class PandasReaderBase(object):
         return pd.read_csv(*args, **kwargs)
 
 
-class NoneReaderBase(object):
+class NoneReaderBase:
     """
     Dummy base
     """

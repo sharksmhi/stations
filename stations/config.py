@@ -12,7 +12,7 @@ from stations.readers.yml import yaml_reader
 from stations.utils import generate_filepaths, recursive_dict_update
 
 
-class SettingsBase(object):
+class SettingsBase:
     def __init__(self, *args, **kwargs):
         super(SettingsBase, self).__init__()
         self.default_attributes = None
@@ -35,8 +35,27 @@ class SettingsBase(object):
                     recursive_dict_update(self.writers, {Path(name).stem: value})
             else:
                 super().__setattr__(Path(name).stem, value)
+        elif name == 'attributes':
+            super().__setattr__(name, self._get_attribute_dictionary(value))
         else:
             super().__setattr__(name, value)
+
+    @staticmethod
+    def _get_attribute_dictionary(settings_attributes):
+        """
+        :param settings_attributes:
+        :return:
+        """
+        d = {}
+        for key, item in settings_attributes.items():
+            if isinstance(item, str):
+                d.setdefault(item, key)
+            elif isinstance(item, list):
+                for attrb in item:
+                    d.setdefault(attrb, key)
+            else:
+                raise Warning('Type of item is nor str or list:', type(item))
+        return d
 
     def set_attributes(self, **kwargs):
         """
@@ -94,6 +113,12 @@ class Settings(SettingsBase):
         Whenever there is not a export path given by the user, we try to export elsewhere..
         :return:
         """
+        if kwargs.get('file_path'):
+            if os.path.isdir(kwargs.get('file_path')):
+                return kwargs.get('file_path')
+            else:
+                raise Warning('file_path given, but it´s not valid.')
+
         target_path = 'C:/station_exports'
         if os.path.isdir('C:/'):
             if not os.path.isdir(target_path):

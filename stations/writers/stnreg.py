@@ -66,7 +66,8 @@ class XlsxWriter:
     """
     """
     def __init__(self, **kwargs):
-        self.xlsx_writer = pd.ExcelWriter(kwargs.get('file_path'), engine='openpyxl')
+        self.xlsx_writer = pd.ExcelWriter(kwargs.get('file_path'),
+                                          engine='openpyxl')
 
     def _load_xlsx_writer(self, save_path, engine='openpyxl'):
         """
@@ -79,7 +80,7 @@ class XlsxWriter:
 
     def write_multiple_sheets(self, dictionary):
         """
-        :param dictionary: dictionary
+        :param dictionary: dictionary with pd.DataFrames
         :return:
         """
         for sheet_name, frame in dictionary.items():
