@@ -41,7 +41,7 @@ class MapWriter(WriterBase):
         :param list_obj:
         :return:
         """
-        self.add_markers_as_cluster(list_obj, group_name='Group_name')
+        self.add_markers_as_cluster(list_obj)
         self._write(file_path)
 
     def _write(self, file_path):
@@ -51,31 +51,36 @@ class MapWriter(WriterBase):
         """
         self.map.save(file_path)
 
-    def add_markers_as_cluster(self, list_obj, group_name=None):
+    def add_markers_as_cluster(self, list_objs):
         """
 
-        :param list_obj: stations.handler.List
+        :param list_objs: dictionary of stations.handler.List
         :param group_name:
         :return:
         """
-        fg = self.get_group(name=group_name,
-                            add_to_map=True,
-                            return_group=True)
+        print(type(list_objs))
+        for list_name, item in list_objs.items():
+            print('list_name', list_name)
+            fg = self.get_group(name=list_name,
+                                add_to_map=True,
+                                return_group=True)
 
-        mc = MarkerCluster()
+            mc = MarkerCluster()
 
-        # TODO fix synonyms.replace('<or>', '; ')
+            # TODO fix synonyms.replace('<or>', '; ')
+            for idx in range(item.length):
+                html_obj = self.get_html_object(item.get(key)[idx] for key in self.marker_tag_attributes)
+                popup = self.get_popup(html_obj)
+                marker = self.get_marker([item.get('lat_dd')[idx],
+                                          item.get('lon_dd')[idx]],
+                                         popup=popup,
+                                         icon=folium.Icon(color='blue' if list_name == 'master' else 'red', icon='map-marker'),
+                                         tooltip=item.get('name')[idx] or 'Click me!')
+                marker.add_to(mc)
 
-        for idx in range(list_obj.length):
-            html_obj = self.get_html_object(list_obj.get(key)[idx] for key in self.marker_tag_attributes)
-            popup = self.get_popup(html_obj)
-            marker = self.get_marker([list_obj.get('lat_dd')[idx],
-                                      list_obj.get('lon_dd')[idx]],
-                                     popup=popup,
-                                     tooltip=list_obj.get('name')[idx] or 'Click me!')
-            marker.add_to(mc)
+            mc.add_to(fg)
 
-        mc.add_to(fg)
+        folium.LayerControl().add_to(self.map)
 
     def get_group(self, **kwargs):
         """

@@ -1,16 +1,32 @@
-id: ID
-id_group: ID_GROUP
-name: STATION_NAME
-synonyms: SYNONYM_NAMES
+id:
+    - ID
+    - Id
+id_group:
+    - ID_GROUP
+    - Station Id
+name:
+    - STATION_NAME
+    - Namn
+synonyms:
+    - SYNONYM_NAMES
+    - Synonymer
 ices_name: ICES_STATION_NAME
 lat_dd: LATITUDE_WGS84_SWEREF99_DD
 lon_dd: LONGITUDE_WGS84_SWEREF99_DD
 lat_dm: LAT_DM
 lon_dm: LONG_DM
-lat_sweref99tm: LATITUDE_SWEREF99TM
-lon_sweref99tm: LONGITUDE_SWEREF99TM
+lat_sweref99tm:
+    - LATITUDE_SWEREF99TM
+    - Position SWEREF99 TM N
+lon_sweref99tm:
+    - LONGITUDE_SWEREF99TM
+    - Position SWEREF99 TM E
 radius: OUT_OF_BOUNDS_RADIUS
 wadep: WADEP
-media: MEDIA
-comnt: COMNT
+media:
+    - MEDIA
+    - Media
+comnt:
+    - COMNT
+    - Kommentar
 old_id: OLD_SHARK_ID

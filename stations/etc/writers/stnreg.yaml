@@ -11,6 +11,7 @@ attribute_mapping:
     Position SWEREF99 TM E: lon_sweref99tm
     Kommentar: comnt
 attribute_constants:
+    Namespace: http://stationsregister.miljodatasamverkan.se/so/ef/environmentalmonitoringfacility
     Aktiv: SANT
     Hemlig: FALSKT
     Forcera: ''
@@ -30,6 +31,7 @@ attribute_constants:
     Användare: smhi
     Kommentar: ''
 header:
+    - Namespace
     - Id
     - Station Id
     - Aktiv
