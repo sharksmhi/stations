@@ -43,12 +43,12 @@ class PositionValidator(Validator, ABC):
         :param list_obj:
         :return:
         """
-        print('Validating positions')
+        print('Validating positions..')
         report = {'approved': {},
                   'disapproved': {}}
         for name, north, east in zip(list_obj.get('name'),
-                                    list_obj.get('lat_sweref99tm'),
-                                    list_obj.get('lon_sweref99tm')):
+                                     list_obj.get('lat_sweref99tm'),
+                                     list_obj.get('lon_sweref99tm')):
             point = Point(int(east), int(north))
             validation = self.point_in_polygons(point)
             if validation:
@@ -62,4 +62,4 @@ class PositionValidator(Validator, ABC):
 if __name__ == '__main__':
     file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     pos_val = PositionValidator(file_path=file_path)
-    point = Point(621820, 6785813)
+    # point = Point(621820, 6785813)
