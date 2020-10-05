@@ -60,14 +60,12 @@ class MapWriter(WriterBase):
         """
         print(type(list_objs))
         for list_name, item in list_objs.items():
-            print('list_name', list_name)
             fg = self.get_group(name=list_name,
                                 add_to_map=True,
                                 return_group=True)
 
             mc = MarkerCluster()
 
-            # TODO fix synonyms.replace('<or>', '; ')
             for idx in range(item.length):
                 html_obj = self.get_html_object(item.get(key)[idx] for key in self.marker_tag_attributes)
                 popup = self.get_popup(html_obj)
@@ -119,6 +117,13 @@ class MapWriter(WriterBase):
         :return:
         """
         return folium.Popup(html_obj, max_width=500)
+
+    def add_polyline(self, points, name):
+        folium.PolyLine(points,
+                        weight=4.,
+                        opacity=.5,
+                        popup=folium.Popup(name, max_width=100)
+                        ).add_to(self.map)
 
 
 if __name__ == '__main__':

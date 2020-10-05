@@ -59,7 +59,7 @@ class List(ListBase):
         super(List, self).__init__()
         for key, item in kwargs.items():
             if key == 'meta':
-                if not item:
+                if not item or item == 'None':
                     item = {}
                 item = Meta(**item)
             setattr(self, key, item)

@@ -73,12 +73,12 @@ class NoneReaderBase:
         print('Warning! No data was read due to unrecognizable reader type')
 
 
-class PandasReader(PandasReaderBase):
+class PandasTxtReader(PandasReaderBase):
     """
     Reads txt / csv files
     """
     def __init__(self, *args, **kwargs):
-        super(PandasReader, self).__init__()
+        super(PandasTxtReader, self).__init__()
         for key, item in kwargs.items():
             setattr(self, key, item)
 

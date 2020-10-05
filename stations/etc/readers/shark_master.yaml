@@ -2,4 +2,4 @@ description: Reader for txt files
 name: shark_reader
 meta:
     synonym_separator: "<or>"
-reader: !!python/name:stations.readers.txt.PandasReader ''
+reader: !!python/name:stations.readers.txt.PandasTxtReader ''

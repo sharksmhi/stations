@@ -31,13 +31,13 @@ class App:
             assert 'reader' in kwargs
             assert args
         except AssertionError:
-            print('Warning! No reader or filepath given, hence no list loaded')
+            print('Warning! No reader / no filepath given, hence no list loaded')
             return
 
         reader = self.settings.load_reader(kwargs.get('reader'))
         list_name = kwargs.get('list_name')
-        kwargs.pop('list_name')
-        kwargs.pop('reader')
+        for pop_key in ('list_name', 'reader'):
+            kwargs.pop(pop_key)
         lst = reader.read(*args, **kwargs)
         self.lists.append_new_list(name=list_name,
                                    meta=reader.get('meta'),
@@ -101,6 +101,6 @@ if __name__ == '__main__':
                               attributes={k: k for k in list(new_stations)}
                               )
     #
-    # app.write_list(writer='map', list_names=['master', 'new_stations'])
+    app.write_list(writer='map', list_names=['master', 'new_stations'])
 
-    app.write_list(writer='stnreg', list_name='master')
+    # app.write_list(writer='stnreg', list_name='master')
