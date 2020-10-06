@@ -10,11 +10,11 @@ import pandas as pd
 from stations.writers.writer import WriterBase
 
 
-class SharkWriter(WriterBase):
+class SharkMasterWriter(WriterBase):
     """
     """
     def __init__(self, *args, **kwargs):
-        super(SharkWriter, self).__init__()
+        super(SharkMasterWriter, self).__init__()
         for key, item in kwargs.items():
             setattr(self, key, item)
 
@@ -28,12 +28,23 @@ class SharkWriter(WriterBase):
         for col in self.header:
             lst_key = self.attribute_mapping.get(col)
             if lst_key and hasattr(list_obj, lst_key):
-                df[col] = list_obj.get(lst_key)
+                df[col] = self._set_standard_format(list_obj.get(lst_key), list_obj.meta)
             else:
-                value = self.attribute_constants.get(col) or ''
-                df[col] = [value] * list_obj.length
+                df[col] = [''] * list_obj.length
 
         return df
+
+    @staticmethod
+    def _set_standard_format(serie, meta_obj):
+        """
+        :param serie: pd.Series
+        :param meta_obj: dictionary
+        :return:
+        """
+        if serie.name == 'synonyms':
+            if 'synonym_separator' in meta_obj:
+                serie = serie.str.replace(';', meta_obj.get('synonym_separator'),  regex=False)
+        return serie
 
     def write(self, file_path, list_obj):
         """
@@ -41,17 +52,18 @@ class SharkWriter(WriterBase):
         :param list_obj: stations.handler.List
         :return:
         """
+        multiple_lists = False
+
         if isinstance(list_obj, dict):
-            assert 'shark_master' in list_obj
+            assert 'master' in list_obj
+            df_main = self._get_dataframe(list_obj['master'])
             multiple_lists = True
         else:
-            multiple_lists = False
-
-        df_main = self._get_dataframe(list_obj['shark_master'])
+            df_main = self._get_dataframe(list_obj)
 
         if multiple_lists:
             for list_name in list(list_obj):
-                if list_name == 'shark_master':
+                if list_name == 'master':
                     continue
                 df_add = self._get_dataframe(list_obj[list_name])
                 df_main = df_main.append(df_add).reset_index(drop=True)
@@ -66,6 +78,7 @@ class SharkWriter(WriterBase):
         """
         df.to_csv(
             path_to_new_file,
+            sep='\t',
             na_rep='',
             index=False,
             encoding='cp1252',
