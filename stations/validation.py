@@ -59,6 +59,27 @@ class PositionValidator(Validator, ABC):
         return report
 
 
+class Sweref99tmValidator(Validator, ABC):
+    """
+    """
+    def __init__(self, *args, **kwargs):
+        super(Sweref99tmValidator, self).__init__()
+
+
+class DegreeValidator(Validator, ABC):
+    """
+    """
+    def __init__(self, *args, **kwargs):
+        super(DegreeValidator, self).__init__()
+
+
+class DegreeMinuteValidator(Validator, ABC):
+    """
+    """
+    def __init__(self, *args, **kwargs):
+        super(DegreeMinuteValidator, self).__init__()
+
+
 if __name__ == '__main__':
     file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     pos_val = PositionValidator(file_path=file_path)

@@ -1,2 +1,20 @@
 position:
-    validator:
+    validator: !!python/name:stations.validation.PositionValidator ''
+
+coordinates:
+    sweref99tm:
+        description: Master coordinate system.
+        master: True
+        lat_key: lat_sweref99tm
+        lon_key: lon_sweref99tm
+        validator: !!python/name:stations.validation.Sweref99tmValidator ''
+    dd:
+        master: False
+        lat_key: lat_dd
+        lon_key: lon_dd
+        validator: !!python/name:stations.validation.DegreeValidator ''
+    dm:
+        master: False
+        lat_key: lat_dm
+        lon_key: lon_dm
+        validator: !!python/name:stations.validation.DegreeMinuteValidator ''
