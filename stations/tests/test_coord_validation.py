@@ -7,7 +7,7 @@ Created on 2020-10-06 16:58
 
 """
 from stations.main import App
-from stations.validation import DegreeValidator
+from stations.validation import DegreeValidator, DegreeMinuteValidator
 
 
 if __name__ == '__main__':
@@ -26,5 +26,10 @@ if __name__ == '__main__':
 
     validator = DegreeValidator(lat_key='lat_dd',
                                 lon_key='lon_dd')
+
+    validator.validate(app.lists['stnreg_import'])
+
+    validator = DegreeMinuteValidator(lat_key='lat_dm',
+                                      lon_key='lon_dm')
 
     validator.validate(app.lists['stnreg_import'])

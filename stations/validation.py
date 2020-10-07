@@ -11,7 +11,7 @@ from abc import ABC
 import pandas as pd
 import geopandas as gp
 from shapely.geometry import Point
-from stations.utils import transform_ref_system
+from stations.utils import decdeg_to_decmin, transform_ref_system
 
 
 class Validator:
@@ -78,7 +78,7 @@ class Sweref99tmValidator(Validator, ABC):
         if all(list_obj.get(self.lat_key)) and all(list_obj.get(self.lon_key)):
             return True
         else:
-            print('WARNING! we do not have Sweref99tm coordinates for all stations..')
+            print('WARNING! we do not have Sweref99tm coordinates for all stations (which is mandatory input)..')
             return False
 
 
@@ -88,7 +88,6 @@ class DegreeValidator(Validator, ABC):
     def __init__(self, *args, **kwargs):
         super(DegreeValidator, self).__init__()
         for key, item in kwargs.items():
-            print(key, item)
             setattr(self, key, item)
 
     def validate(self, list_obj):
@@ -96,7 +95,7 @@ class DegreeValidator(Validator, ABC):
         :param list_obj: stations.handler.List
         :return:
         """
-        if not list_obj.get(self.lat_key):
+        if not list_obj.has_attribute(self.lat_key):
             d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
                  self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
             list_obj.set_attributes(**d)
@@ -128,11 +127,18 @@ class DegreeMinuteValidator(Validator, ABC):
         :param list_obj: stations.handler.List
         :return:
         """
-        if all(list_obj.get(self.lat_key)) and all(list_obj.get(self.lon_key)):
+        if not list_obj.has_attribute(self.lat_key):
+            d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
+                 self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
+            list_obj.set_attributes(**d)
+        if all(list_obj.get(self.lat_key)):
             return True
         else:
-            print('WARNING! we do not have Sweref99tm coordinates for all stations..')
-            return False
+            list_obj.boolean = list_obj.get(self.lat_key).eq('')
+            new_lat = [decdeg_to_decmin(p) for p in list_obj.get('lat_dd', boolean=True)]
+            new_lon = [decdeg_to_decmin(p) for p in list_obj.get('lon_dd', boolean=True)]
+            list_obj.update_attribute_values(self.lat_key, new_lat)
+            list_obj.update_attribute_values(self.lon_key, new_lon)
 
 
 if __name__ == '__main__':

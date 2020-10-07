@@ -50,6 +50,16 @@ class ListBase:
             setattr(self, key, value)
             self.loaded_attributes.append(key)
 
+    def has_attribute(self, attr):
+        """
+        :param attr:
+        :return:
+        """
+        if attr in self.__dict__.keys():
+            return True
+        else:
+            return False
+
 
 class List(ListBase):
     """
