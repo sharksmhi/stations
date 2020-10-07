@@ -40,15 +40,14 @@ class ListBase:
             value = {}
         super().__setattr__(name, value)
 
-    def set_attributes(self, obj, **kwargs):
+    def set_attributes(self, **kwargs):
         """
-        With the possibility to add attributes to an object which is not 'self'
         :param obj: object
         :param kwargs: Dictionary
         :return: sets attributes to object
         """
         for key, value in kwargs.items():
-            setattr(obj, key, value)
+            setattr(self, key, value)
             self.loaded_attributes.append(key)
 
 
@@ -64,16 +63,18 @@ class List(ListBase):
                 item = Meta(**item)
             setattr(self, key, item)
 
-    def get(self, item):
-        """
-        :param item:
-        :return:
-        """
+    def get(self, item, boolean=False):
+        """"""
         if item in self.__dict__.keys():
-            return self.__getattribute__(item)
+            if boolean:
+                return self.__getattribute__(item)[self.boolean]
+            else:
+                return self.__getattribute__(item)
         else:
             print('Warning! Can´t find attribute: %s' % item)
-            return 'None'
+            return ''
+            # return None
+            # return 'None'
 
     def update_attributes(self, *args, **kwargs):
         """
@@ -107,7 +108,15 @@ class List(ListBase):
 
         self.set_standard_formats(dictionary)
 
-        self.set_attributes(self, **dictionary)
+        self.set_attributes(**dictionary)
+
+    def update_attribute_values(self, attr, values):
+        """
+        :param attr:
+        :param values:
+        :return:
+        """
+        self.__getattribute__(attr)[self.boolean] = values
 
     def set_standard_formats(self, data):
         """

@@ -8,7 +8,6 @@ Created on 2020-09-28 10:44
 """
 import folium
 from folium.plugins import MarkerCluster
-from folium.features import DivIcon
 from stations.writers.writer import WriterBase
 
 
@@ -58,7 +57,6 @@ class MapWriter(WriterBase):
         :param group_name:
         :return:
         """
-        print(type(list_objs))
         for list_name, item in list_objs.items():
             fg = self.get_group(name=list_name,
                                 add_to_map=True,

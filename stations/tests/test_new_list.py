@@ -8,6 +8,7 @@ Created on 2020-10-02 12:18
 """
 from stations.main import App
 from stations.utils import transform_ref_system
+from stations.validation import PositionValidator
 
 
 if __name__ == '__main__':
@@ -30,4 +31,4 @@ if __name__ == '__main__':
                               attributes={k: k for k in list(new_stations)}
                               )
 
-    app.write_list(writer='map', list_names=['new_stations'])
+    # app.write_list(writer='map', list_names=['new_stations'])
