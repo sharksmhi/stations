@@ -64,11 +64,7 @@ class List(ListBase):
             setattr(self, key, item)
 
     def get(self, item, boolean=False):
-        """
-        :param item:
-        :param boolean:
-        :return:
-        """
+        """"""
         if item in self.__dict__.keys():
             if boolean:
                 return self.__getattribute__(item)[self.boolean]
@@ -93,6 +89,7 @@ class List(ListBase):
             data = kwargs.get('data')
         else:
             data = ()
+
         try:
             assert len(data)
         except AssertionError:
@@ -106,7 +103,8 @@ class List(ListBase):
             print('No attributes given..')
             return
 
-        dictionary = {a: pd.Series(data[key]) for key, a in attributes.items() if key in data}
+        dictionary = {a: pd.Series(data[key]).rename(a)
+                      for key, a in attributes.items() if key in data}
 
         self.set_standard_formats(dictionary)
 
@@ -120,14 +118,14 @@ class List(ListBase):
         """
         self.__getattribute__(attr)[self.boolean] = values
 
-    def set_standard_formats(self, dictionary):
+    def set_standard_formats(self, data):
         """
         :param dictionary:
         :return:
         """
         for key, item in self.meta.items():
-            if key == 'synonym_separator' and 'synonyms' in dictionary:
-                dictionary['synonyms'] = dictionary['synonyms'].str.replace(item, ';')
+            if key == 'synonym_separator' and 'synonyms' in data:
+                data['synonyms'] = data['synonyms'].str.replace(item, ';', regex=False)
 
     @property
     def length(self):
