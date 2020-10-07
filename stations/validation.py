@@ -11,6 +11,7 @@ from abc import ABC
 import pandas as pd
 import geopandas as gp
 from shapely.geometry import Point
+from stations.utils import transform_ref_system
 
 
 class Validator:
@@ -18,6 +19,8 @@ class Validator:
     """
     def __init__(self, *args, **kwargs):
         super(Validator, self).__init__()
+        self.lat_key = None
+        self.lon_key = None
 
     def validate(self, list_obj):
         raise NotImplementedError
@@ -64,6 +67,19 @@ class Sweref99tmValidator(Validator, ABC):
     """
     def __init__(self, *args, **kwargs):
         super(Sweref99tmValidator, self).__init__()
+        for key, item in kwargs.items():
+            setattr(self, key, item)
+
+    def validate(self, list_obj):
+        """
+        :param list_obj: stations.handler.List
+        :return:
+        """
+        if all(list_obj.get(self.lat_key)) and all(list_obj.get(self.lon_key)):
+            return True
+        else:
+            print('WARNING! we do not have Sweref99tm coordinates for all stations..')
+            return False
 
 
 class DegreeValidator(Validator, ABC):
@@ -71,6 +87,32 @@ class DegreeValidator(Validator, ABC):
     """
     def __init__(self, *args, **kwargs):
         super(DegreeValidator, self).__init__()
+        for key, item in kwargs.items():
+            print(key, item)
+            setattr(self, key, item)
+
+    def validate(self, list_obj):
+        """
+        :param list_obj: stations.handler.List
+        :return:
+        """
+        if not list_obj.get(self.lat_key):
+            d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
+                 self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
+            list_obj.set_attributes(**d)
+        if all(list_obj.get(self.lat_key)) and all(list_obj.get(self.lon_key)):
+            return True
+        else:
+            list_obj.boolean = list_obj.get(self.lat_key).eq('')
+            new_lat = []
+            new_lon = []
+            for lat, lon in zip(list_obj.get('lat_sweref99tm', boolean=True),
+                                list_obj.get('lon_sweref99tm', boolean=True)):
+                newla, newlo = transform_ref_system(lat=lat, lon=lon)
+                new_lat.append(str(round(newla, 6)))
+                new_lon.append(str(round(newlo, 6)))
+            list_obj.update_attribute_values(self.lat_key, new_lat)
+            list_obj.update_attribute_values(self.lon_key, new_lon)
 
 
 class DegreeMinuteValidator(Validator, ABC):
@@ -78,6 +120,19 @@ class DegreeMinuteValidator(Validator, ABC):
     """
     def __init__(self, *args, **kwargs):
         super(DegreeMinuteValidator, self).__init__()
+        for key, item in kwargs.items():
+            setattr(self, key, item)
+
+    def validate(self, list_obj):
+        """
+        :param list_obj: stations.handler.List
+        :return:
+        """
+        if all(list_obj.get(self.lat_key)) and all(list_obj.get(self.lon_key)):
+            return True
+        else:
+            print('WARNING! we do not have Sweref99tm coordinates for all stations..')
+            return False
 
 
 if __name__ == '__main__':
