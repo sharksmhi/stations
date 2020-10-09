@@ -4,7 +4,7 @@ default_file_name: 'station.txt'
 attribute_mapping:
     ID: id
     ID_GROUP: id_group
-    STATION_NAME: name
+    STATION_NAME: statn
     SYNONYM_NAMES: synonyms
     ICES_STATION_NAME: ices_name
     LAT_DM: lat_dm

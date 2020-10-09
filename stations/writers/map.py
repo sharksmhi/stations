@@ -71,7 +71,7 @@ class MapWriter(WriterBase):
                                           item.get('lon_dd')[idx]],
                                          popup=popup,
                                          icon=folium.Icon(color='blue' if list_name == 'master' else 'red', icon='map-marker'),
-                                         tooltip=item.get('name')[idx] or 'Click me!')
+                                         tooltip=item.get('statn')[idx] or 'Click me!')
                 marker.add_to(mc)
 
             mc.add_to(fg)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
     m = MapWriter(map_settings={'location': [61.75, 19.45],
                                 'zoom_start': 5},
-                  marker_tag_attributes={'name': 'name',
+                  marker_tag_attributes={'statn': 'statn',
                                          'id': 'id',
                                          'lat_dd': 'lat_dd',
                                          'lon_dd': 'lon_dd'})

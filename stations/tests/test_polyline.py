@@ -14,7 +14,7 @@ from stations.validators.position import PositionValidator
 if __name__ == '__main__':
     m = MapWriter(map_settings={'location': [61.75, 19.45],
                                 'zoom_start': 5},
-                  marker_tag_attributes={'name': 'name',
+                  marker_tag_attributes={'statn': 'statn',
                                          'id': 'id',
                                          'lat_dd': 'lat_dd',
                                          'lon_dd': 'lon_dd'}

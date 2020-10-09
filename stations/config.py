@@ -119,6 +119,18 @@ class Settings(SettingsBase):
         validator_instance = self.validators[validator].get('validator')
         return validator_instance(**self.validators.get(validator))
 
+    @property
+    def validators_sorted(self):
+        """
+        We need a specific order when validating. sweref is master and the other validators depend on it!
+        :return: list
+        """
+        lst = ['coordinates_sweref', 'coordinates_dd']
+        for l in self.validators:
+            if l not in lst:
+                lst.append(l)
+        return lst
+
     def get_export_file_path(self, **kwargs):
         """
         Whenever there is not a export path given by the user, we try to export elsewhere..

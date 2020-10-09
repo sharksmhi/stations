@@ -1,4 +1,5 @@
 description: Master coordinate system.
+name: coordinates_sweref
 lat_key: lat_sweref99tm
 lon_key: lon_sweref99tm
-validator: !!python/name:stations.validators.coordinates.Sweref99tmValidator ''
+validator: !!python/name:stations.validators.coordinates.SweRef99tmValidator ''

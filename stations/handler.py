@@ -25,6 +25,7 @@ class ListBase:
         super(ListBase, self).__init__()
         self.loaded_attributes = []
         self.boolean = True
+        self.statn = None
         self.name = None
         self.meta = None
 
@@ -83,8 +84,6 @@ class List(ListBase):
         else:
             print('Warning! Can´t find attribute: %s' % item)
             return ''
-            # return None
-            # return 'None'
 
     def update_attributes(self, *args, **kwargs):
         """
@@ -142,7 +141,7 @@ class List(ListBase):
         """
         :return:
         """
-        return len(self.name)
+        return len(self.statn)
 
 
 class MultiList(dict):
@@ -157,7 +156,7 @@ class MultiList(dict):
         """
         name = kwargs.get('name')
         if name:
-            self.setdefault(name, List(meta=kwargs.get('meta')))
+            self.setdefault(name, List(meta=kwargs.get('meta'), name=name))
             self[name].update_attributes(**kwargs)
         else:
             raise Warning('No list name given')
@@ -170,7 +169,6 @@ class MultiList(dict):
         if isinstance(list_names, list):
             return {name: self[name] for name in list_names}
         else:
-            print(list_names)
             return self[list_names]
 
 

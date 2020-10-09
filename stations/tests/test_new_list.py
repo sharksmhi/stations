@@ -11,7 +11,7 @@ from stations.main import App
 if __name__ == '__main__':
     app = App()
 
-    new_stations = {'name': ['Hästholmen Syd', 'Svartskär Ost'],
+    new_stations = {'statn': ['Hästholmen Syd', 'Svartskär Ost'],
                     'lat_sweref99tm': ['6360582', '6363345'],
                     'lon_sweref99tm': ['317200', '310970'],
                     'lat_dd': [],

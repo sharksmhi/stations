@@ -8,7 +8,7 @@ Created on 2020-09-29 18:41
 """
 import geopandas as gp
 from shapely.geometry import Point
-from stations.validators.validator import Validator
+from stations.validators.validator import Validator, ValidatorLog
 
 
 class PositionValidator(Validator):
@@ -42,10 +42,10 @@ class PositionValidator(Validator):
         :param list_obj:
         :return:
         """
-        print('Validating positions..')
+        self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
         report = {'approved': {},
                   'disapproved': {}}
-        for name, north, east in zip(list_obj.get('name'),
+        for name, north, east in zip(list_obj.get('statn'),
                                      list_obj.get(self.lat_key),
                                      list_obj.get(self.lon_key)):
             point = Point(int(east), int(north))
@@ -54,8 +54,13 @@ class PositionValidator(Validator):
                 report['approved'].setdefault(name, (north, east))
             else:
                 report['disapproved'].setdefault(name, (north, east))
-        print('Validating completed!')
-        return report
+        ValidatorLog.append_info(
+            list_name=list_obj.get('name'),
+            validator_name=self.name,
+            info=report,
+        )
+
+        self.message(self.__class__.__name__, 'Validation complete\n')
 
 
 if __name__ == '__main__':

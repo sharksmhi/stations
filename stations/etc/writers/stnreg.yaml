@@ -4,7 +4,7 @@ default_file_name: 'station_list_stnreg.xlsx'
 attribute_mapping:
     Id: id
     Station Id: id_group
-    Namn: name
+    Namn: statn
     Media: media
     Synonymer: synonyms
     Position SWEREF99 TM N: lat_sweref99tm

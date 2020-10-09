@@ -6,9 +6,10 @@ Created on 2020-09-28 16:09
 @author: a002028
 
 """
+from abc import ABC
 
 
-class WriterBase:
+class WriterBase(ABC):
     """
     """
     def __init__(self, *args, **kwargs):

@@ -4,7 +4,7 @@ id:
 id_group:
     - ID_GROUP
     - Station Id
-name:
+statn:
     - STATION_NAME
     - Namn
 synonyms:

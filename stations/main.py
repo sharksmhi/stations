@@ -20,12 +20,18 @@ class App:
     def validate_list(self, *args, **kwargs):
         """
         :param args:
+            Expects:
+                list_name
         :param kwargs:
+            Addition:
+                validator_list
         :return:
         """
-        assert 'list_name' in kwargs
-
-
+        validator_list = kwargs.get('validator_list') or self.settings.validators_sorted
+        for list_name in args:
+            for validator_name in validator_list:
+                validator = self.settings.load_validator(validator_name)
+                validator.validate(self.lists.select(list_name))
 
     def read_list(self, *args, **kwargs):
         """
@@ -57,7 +63,7 @@ class App:
         :param kwargs: dict.
             Expects:
                 writer
-                list_name
+                list_name or list_names or data
             Addition:
                 file_path
                 file_name
@@ -73,9 +79,10 @@ class App:
         kwargs.setdefault('default_file_name', writer.default_file_name)
         file_path = self.settings.get_export_file_path(**kwargs)
 
+        lst = kwargs.get('data') or self.lists.select(kwargs.get('list_name') or kwargs.get('list_names'))
+
         print('Writing stations to: %s' % file_path)
-        writer.write(file_path, self.lists.select(kwargs.get('list_name') or
-                                                  kwargs.get('list_names')))
+        writer.write(file_path, lst)
         print('Writer done!')
 
 
