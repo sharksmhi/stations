@@ -7,7 +7,7 @@ Created on 2020-10-06 16:58
 
 """
 from stations.main import App
-from stations.validation import DegreeValidator, DegreeMinuteValidator
+from stations.validators.position import DegreeValidator, DegreeMinuteValidator
 
 
 if __name__ == '__main__':

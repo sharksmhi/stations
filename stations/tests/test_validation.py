@@ -7,7 +7,7 @@ Created on 2020-10-01 16:37
 
 """
 from stations.main import App
-from stations.validation import PositionValidator
+from stations.validators.position import PositionValidator
 
 if __name__ == '__main__':
     app = App()

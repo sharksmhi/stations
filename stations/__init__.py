@@ -8,4 +8,6 @@ Created on 2020-09-24 16:44
 """
 from stations.readers import *
 from stations.writers import *
+from stations.validators import *
+
 from stations import *

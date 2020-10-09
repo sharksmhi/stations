@@ -1,0 +1,4 @@
+description: Validates if new points lies within SVAR-areas (Baltic Sea, Kattegat, Skagerrak)
+lat_key: lat_sweref99tm
+lon_key: lon_sweref99tm
+validator: !!python/name:stations.validators.position.PositionValidator ''

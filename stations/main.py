@@ -17,6 +17,16 @@ class App:
         self.settings = Settings(**kwargs)
         self.lists = MultiList()
 
+    def validate_list(self, *args, **kwargs):
+        """
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        assert 'list_name' in kwargs
+
+
+
     def read_list(self, *args, **kwargs):
         """
         :param args: tuple
@@ -27,12 +37,8 @@ class App:
                 reader
         :return:
         """
-        try:
-            assert 'reader' in kwargs
-            assert args
-        except AssertionError:
-            print('Warning! No reader / no filepath given, hence no list loaded')
-            return
+        assert 'reader' in kwargs
+        assert args
 
         reader = self.settings.load_reader(kwargs.get('reader'))
         list_name = kwargs.get('list_name')

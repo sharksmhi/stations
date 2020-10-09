@@ -6,64 +6,14 @@ Created on 2020-09-29 18:41
 @author: a002028
 
 """
-from abc import ABC
-
 import pandas as pd
-import geopandas as gp
-from shapely.geometry import Point
 from stations.utils import decdeg_to_decmin, transform_ref_system
+from stations.validators.validator import Validator
 
 
-class Validator:
+class Sweref99tmValidator(Validator):
     """
-    """
-    def __init__(self, *args, **kwargs):
-        super(Validator, self).__init__()
-        self.lat_key = None
-        self.lon_key = None
-
-    def validate(self, list_obj):
-        raise NotImplementedError
-
-
-class PositionValidator(Validator, ABC):
-    """
-    """
-    def __init__(self, *args, **kwargs):
-        super(PositionValidator, self).__init__()
-        self.gf = kwargs.get('geodataframe') or gp.read_file(kwargs.get('file_path'))
-
-    def point_in_polygons(self, point):
-        """
-        With "point_in_polygons" we mean that the point lies in the ocean.
-        :param point: shapely.geometry.Point
-        :return:
-        """
-        return self.gf.contains(point).any()
-
-    def validate(self, list_obj):
-        """
-        :param list_obj:
-        :return:
-        """
-        print('Validating positions..')
-        report = {'approved': {},
-                  'disapproved': {}}
-        for name, north, east in zip(list_obj.get('name'),
-                                     list_obj.get('lat_sweref99tm'),
-                                     list_obj.get('lon_sweref99tm')):
-            point = Point(int(east), int(north))
-            validation = self.point_in_polygons(point)
-            if validation:
-                report['approved'].setdefault(name, (north, east))
-            else:
-                report['disapproved'].setdefault(name, (north, east))
-        print('Validating completed!')
-        return report
-
-
-class Sweref99tmValidator(Validator, ABC):
-    """
+    Coordinates in SWEREF 99TM are mandatory information for any list
     """
     def __init__(self, *args, **kwargs):
         super(Sweref99tmValidator, self).__init__()
@@ -82,7 +32,7 @@ class Sweref99tmValidator(Validator, ABC):
             return False
 
 
-class DegreeValidator(Validator, ABC):
+class DegreeValidator(Validator):
     """
     """
     def __init__(self, *args, **kwargs):
@@ -114,7 +64,7 @@ class DegreeValidator(Validator, ABC):
             list_obj.update_attribute_values(self.lon_key, new_lon)
 
 
-class DegreeMinuteValidator(Validator, ABC):
+class DegreeMinuteValidator(Validator):
     """
     """
     def __init__(self, *args, **kwargs):
@@ -139,9 +89,3 @@ class DegreeMinuteValidator(Validator, ABC):
             new_lon = [decdeg_to_decmin(p) for p in list_obj.get('lon_dd', boolean=True)]
             list_obj.update_attribute_values(self.lat_key, new_lat)
             list_obj.update_attribute_values(self.lon_key, new_lon)
-
-
-if __name__ == '__main__':
-    file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
-    pos_val = PositionValidator(file_path=file_path)
-    # point = Point(621820, 6785813)

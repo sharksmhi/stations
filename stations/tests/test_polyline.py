@@ -6,10 +6,9 @@ Created on 2020-10-02 08:56
 @author: a002028
 
 """
-import numpy as np
 from stations.utils import transform_ref_system
 from stations.writers.map import MapWriter
-from stations.validation import PositionValidator
+from stations.validators.position import PositionValidator
 
 
 if __name__ == '__main__':

@@ -18,6 +18,7 @@ class SettingsBase:
         self.default_attributes = None
         self.readers = {}
         self.writers = {}
+        self.validators = {}
 
     def __setattr__(self, name, value):
         """
@@ -28,11 +29,13 @@ class SettingsBase:
         :return:
         """
         if os.path.isfile(name):
-            if isinstance(value, dict) and ('readers' in name or 'writers' in name):
+            if isinstance(value, dict) and ('readers' in name or 'writers' in name or 'validators' in name):
                 if 'readers' in name:
                     recursive_dict_update(self.readers, {Path(name).stem: value})
-                else:
+                elif 'writers' in name:
                     recursive_dict_update(self.writers, {Path(name).stem: value})
+                else:
+                    recursive_dict_update(self.validators, {Path(name).stem: value})
             else:
                 super().__setattr__(Path(name).stem, value)
         elif name == 'attributes':
@@ -107,6 +110,14 @@ class Settings(SettingsBase):
         """
         writer_instance = self.writers[writer].get('writer')
         return writer_instance(**self.writers.get(writer))
+
+    def load_validator(self, validator):
+        """
+        :param validator: str, given by user
+        :return:
+        """
+        validator_instance = self.validators[validator].get('validator')
+        return validator_instance(**self.validators.get(validator))
 
     def get_export_file_path(self, **kwargs):
         """

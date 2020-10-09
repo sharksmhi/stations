@@ -1,3 +1,5 @@
+shapely
+geopandas
 pyproj
 folium
 PyYAML

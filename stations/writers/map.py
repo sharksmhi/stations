@@ -65,7 +65,7 @@ class MapWriter(WriterBase):
             mc = MarkerCluster()
 
             for idx in range(item.length):
-                html_obj = self.get_html_object(item.get(key)[idx] for key in self.marker_tag_attributes)
+                html_obj = self.get_html_object(item, idx)
                 popup = self.get_popup(html_obj)
                 marker = self.get_marker([item.get('lat_dd')[idx],
                                           item.get('lon_dd')[idx]],
@@ -91,12 +91,21 @@ class MapWriter(WriterBase):
         if kwargs.get('return_group'):
             return fg
 
-    def get_html_object(self, *args):
+    def get_html_object(self, item, list_idx):
         """
-        :param args:
+        :param item:
+        :param list_idx:
         :return:
         """
-        html_string = self.html_fmt % tuple(*args)
+        args = []
+        for tag in self.marker_tag_attributes:
+            value = item.get(tag)
+            if type(value) != str:
+                value = value[list_idx]
+            else:
+                value = '-'
+            args.append(value)
+        html_string = self.html_fmt % tuple(args)
         return folium.Html(html_string, script=True)
 
     @staticmethod
