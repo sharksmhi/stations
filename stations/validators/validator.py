@@ -64,6 +64,9 @@ class ValidatorLog:
             for a in args:
                 self.log['etc'].append(a)
 
+        if kwargs.get('reset_log'):
+            self.log = {}
+
         if kwargs.get('list_name'):
             list_name = kwargs.get('list_name')
 
