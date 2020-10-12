@@ -21,7 +21,7 @@ class App:
         """
         :param args:
             Expects:
-                list_name
+                list_name(s)
         :param kwargs:
             Addition:
                 validator_list
@@ -50,12 +50,15 @@ class App:
         list_name = kwargs.get('list_name')
         for pop_key in ('list_name', 'reader'):
             kwargs.pop(pop_key)
+
         lst = reader.read(*args, **kwargs)
-        self.lists.append_new_list(name=list_name,
-                                   meta=reader.get('meta'),
-                                   data=lst,
-                                   attributes=self.settings.attributes
-                                   )
+
+        self.lists.append_new_list(
+            name=list_name,
+            meta=reader.get('meta'),
+            data=lst,
+            attributes=self.settings.attributes,
+        )
 
     def write_list(self, *args, **kwargs):
         """
@@ -88,32 +91,31 @@ class App:
 
 if __name__ == '__main__':
     app = App()
-    app.read_list('C:/Arbetsmapp/config/station.txt',
-                  header=0,
-                  sep='\t',
-                  encoding='cp1252',
-                  dtype=str,
-                  keep_default_na=False,
-                  reader='shark_master',
-                  list_name='master')
+    app.read_list(
+        'C:/Arbetsmapp/config/station.txt',
+        header=0,
+        sep='\t',
+        encoding='cp1252',
+        dtype=str,
+        keep_default_na=False,
+        reader='shark_master',
+        list_name='master',
+    )
 
-    new_stations = {'name': ['Avan centroid', 'Vallviksfjärden centroid'],
-                    'lat_sweref99tm': ['6729995', '6782432'],
-                    'lon_sweref99tm': ['618965', '620581'],
-                    'lat_dd': [],
-                    'lon_dd': []}
-    from stations.utils import transform_ref_system
+    new_stations = {
+        'statn': ['Avan centroid', 'Vallviksfjärden centroid'],
+        'lat_sweref99tm': ['6729995', '6782432'],
+        'lon_sweref99tm': ['618965', '620581'],
+    }
 
-    for la, lo in zip(new_stations['lat_sweref99tm'], new_stations['lon_sweref99tm']):
-        lat_dd, lon_dd = transform_ref_system(lat=la, lon=lo)
-        new_stations['lat_dd'].append(round(lat_dd, 5))
-        new_stations['lon_dd'].append(round(lon_dd, 5))
+    app.lists.append_new_list(
+        name='new_stations',
+        data=new_stations,
+        attributes={k: k for k in list(new_stations)}
+    )
 
-    app.lists.append_new_list(name='new_stations',
-                              data=new_stations,
-                              attributes={k: k for k in list(new_stations)}
-                              )
-    #
+    app.validate_list('new_stations')
+
     app.write_list(writer='map', list_names=['master', 'new_stations'])
 
     # app.write_list(writer='stnreg', list_name='master')

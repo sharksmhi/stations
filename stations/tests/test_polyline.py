@@ -12,13 +12,14 @@ from stations.validators.position import PositionValidator
 
 
 if __name__ == '__main__':
-    m = MapWriter(map_settings={'location': [61.75, 19.45],
-                                'zoom_start': 5},
-                  marker_tag_attributes={'statn': 'statn',
-                                         'id': 'id',
-                                         'lat_dd': 'lat_dd',
-                                         'lon_dd': 'lon_dd'}
-                  )
+    m = MapWriter(
+        map_settings={'location': [61.75, 19.45],
+                      'zoom_start': 5},
+        marker_tag_attributes={'statn': 'statn',
+                               'id': 'id',
+                               'lat_dd': 'lat_dd',
+                               'lon_dd': 'lon_dd'}
+    )
 
     file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     pos_val = PositionValidator(file_path=file_path)

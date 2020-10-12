@@ -13,7 +13,7 @@ from stations.validators.validator import Validator, ValidatorLog
 
 class PositionValidator(Validator):
     """
-    Using SVAR areas to validate if any given position lies in sea water or outside.
+    Using SVAR areas to validate if a given position lies in sea water or outside.
     Example of shapefile that can be used: Havsomr_SVAR_2016_3c_CP1252.shp
 
     NOTE: Version 2016_3c does contain scale errors, new version (may 2021) should be more accurate..
@@ -39,7 +39,7 @@ class PositionValidator(Validator):
 
     def validate(self, list_obj):
         """
-        :param list_obj:
+        :param list_obj: stations.handler.List
         :return:
         """
         self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
@@ -48,13 +48,13 @@ class PositionValidator(Validator):
         for name, north, east in zip(list_obj.get('statn'),
                                      list_obj.get(self.lat_key),
                                      list_obj.get(self.lon_key)):
-            point = Point(int(east), int(north))
+            point = Point(float(east), float(north))
             validation = self.point_in_polygons(point)
             if validation:
                 report['approved'].setdefault(name, (north, east))
             else:
                 report['disapproved'].setdefault(name, (north, east))
-        ValidatorLog.append_info(
+        ValidatorLog.update_info(
             list_name=list_obj.get('name'),
             validator_name=self.name,
             info=report,
@@ -66,5 +66,5 @@ class PositionValidator(Validator):
 if __name__ == '__main__':
     file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     pos_val = PositionValidator(file_path=file_path)
-    point = Point(621820, 6785813)
+    point = Point(float(621820), float(6785813))
     print('point_in_polygons:', pos_val.point_in_polygons(point))

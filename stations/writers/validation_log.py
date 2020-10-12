@@ -7,6 +7,7 @@ Created on 2020-10-09 17:22
 
 """
 import yaml
+# import json
 from stations.writers.writer import WriterBase
 
 
@@ -25,6 +26,8 @@ class ValidationWriter(WriterBase):
         :param list_obj: stations.validators.ValidatorLog.log
         :return:
         """
-        #TODO use json instead
         with open(file_path, 'w') as file:
             yaml.safe_dump(log, file, indent=4, default_flow_style=False)
+
+        # with open(file_path, "w", encoding='cp1252') as file:
+        #     json.dump(log, file, indent=4)

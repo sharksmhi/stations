@@ -30,7 +30,8 @@ class SharkMasterWriter(WriterBase):
             if lst_key and hasattr(list_obj, lst_key):
                 df[col] = self._set_standard_format(list_obj.get(lst_key), list_obj.meta)
             else:
-                df[col] = [''] * list_obj.length
+                value = self.attribute_constants.get(col) or ''
+                df[col] = [value] * list_obj.length
 
         return df
 
@@ -49,7 +50,7 @@ class SharkMasterWriter(WriterBase):
     def write(self, file_path, list_obj):
         """
         :param file_path: str
-        :param list_obj: stations.handler.List
+        :param list_obj: stations.handler.List or dict('list_name'=stations.handler.List)
         :return:
         """
         multiple_lists = False

@@ -15,10 +15,12 @@ if __name__ == '__main__':
 
     fid = 'C:\\station_exports\\Stationsregistret_validering_gävle_validerad.xlsx'
 
-    app.read_list(fid,
-                  sheet_name='Provplatser',
-                  header=0,
-                  dtype=str,
-                  keep_default_na=False,
-                  reader='xlsx',
-                  list_name='stnreg_import')
+    app.read_list(
+        fid,
+        sheet_name='Provplatser',
+        header=0,
+        dtype=str,
+        keep_default_na=False,
+        reader='xlsx',
+        list_name='stnreg_import'
+    )

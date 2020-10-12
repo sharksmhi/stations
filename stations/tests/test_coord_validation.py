@@ -16,20 +16,20 @@ if __name__ == '__main__':
 
     fid = 'C:\\station_exports\\Stationsregistret_validering_gävle_validerad.xlsx'
 
-    app.read_list(fid,
-                  sheet_name='Provplatser',
-                  header=0,
-                  dtype=str,
-                  keep_default_na=False,
-                  reader='xlsx',
-                  list_name='stnreg_import')
+    app.read_list(
+        fid,
+        sheet_name='Provplatser',
+        header=0,
+        dtype=str,
+        keep_default_na=False,
+        reader='xlsx',
+        list_name='stnreg_import'
+    )
 
-    validator = DegreeValidator(lat_key='lat_dd',
-                                lon_key='lon_dd')
+    validator = DegreeValidator(lat_key='lat_dd', lon_key='lon_dd')
 
     validator.validate(app.lists['stnreg_import'])
 
-    validator = DegreeMinuteValidator(lat_key='lat_dm',
-                                      lon_key='lon_dm')
+    validator = DegreeMinuteValidator(lat_key='lat_dm', lon_key='lon_dm')
 
     validator.validate(app.lists['stnreg_import'])

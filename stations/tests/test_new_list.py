@@ -23,9 +23,10 @@ if __name__ == '__main__':
         new_stations['lat_dd'].append(round(lat_dd, 8))
         new_stations['lon_dd'].append(round(lon_dd, 8))
 
-    app.lists.append_new_list(name='new_stations',
-                              data=new_stations,
-                              attributes={k: k for k in list(new_stations)}
-                              )
+    app.lists.append_new_list(
+        name='new_stations',
+        data=new_stations,
+        attributes={k: k for k in list(new_stations)}
+    )
 
     # app.write_list(writer='map', list_names=['new_stations'])

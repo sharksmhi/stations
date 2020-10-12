@@ -9,5 +9,5 @@ Created on 2020-09-24 16:27
 from stations.writers.stnreg import StnRegWriter
 from stations.writers.shark_master import SharkMasterWriter
 from stations.writers.map import MapWriter
-from stations.writers.writer import WriterBase
 from stations.writers.validation_log import ValidationWriter
+from stations.writers.writer import WriterBase

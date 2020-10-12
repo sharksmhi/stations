@@ -18,6 +18,8 @@ attribute_mapping:
     MEDIA: media
     OLD_SHARK_ID: old_id
     COMNT: comnt
+attribute_constants:
+    OUT_OF_BOUNDS_RADIUS: 1200
 header:
     - ID
     - ID_GROUP

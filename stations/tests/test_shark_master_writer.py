@@ -7,27 +7,41 @@ Created on 2020-10-05 14:58
 
 """
 from stations.main import App
-from stations.utils import transform_ref_system
+from stations.validators.validator import ValidatorLog
 
 
 if __name__ == '__main__':
     app = App()
 
-    app.read_list('C:/Arbetsmapp/config/station.txt',
-                  header=0,
-                  sep='\t',
-                  encoding='cp1252',
-                  dtype=str,
-                  keep_default_na=False,
-                  reader='shark_master',
-                  list_name='master')
+    app.read_list(
+        'C:/Arbetsmapp/config/station.txt',
+        header=0,
+        sep='\t',
+        encoding='cp1252',
+        dtype=str,
+        keep_default_na=False,
+        reader='shark_master',
+        list_name='master'
+    )
 
-    app.read_list('C:/station_exports/Stationsregistret_validering_gävle_validerad.xlsx',
-                  sheet_name='Provplatser',
-                  header=0,
-                  dtype=str,
-                  keep_default_na=False,
-                  reader='xlsx',
-                  list_name='stnreg_import')
+    app.read_list(
+        'C:/station_exports/Stationsregistret_validering_gävle_validerad.xlsx',
+        sheet_name='Provplatser',
+        header=0,
+        dtype=str,
+        keep_default_na=False,
+        reader='xlsx',
+        list_name='stnreg_import'
+    )
 
-    app.write_list(writer='shark_master', list_names=['master', 'stnreg_import'])
+    app.validate_list('stnreg_import')
+
+    app.write_list(
+        writer='shark_master',
+        list_names=['master', 'stnreg_import'],
+    )
+
+    app.write_list(
+        writer='validation_log',
+        data=ValidatorLog.log
+    )

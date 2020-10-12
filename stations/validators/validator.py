@@ -23,6 +23,7 @@ class Validator(ABC):
         self.lat_key = None
         self.lon_key = None
         self.fill_in_new_values = None
+        self.attributes = None
 
     def validate(self, list_obj):
         raise NotImplementedError
@@ -76,5 +77,5 @@ class ValidatorLog:
                 )
 
     @classmethod
-    def append_info(cls, *args, **kwargs):
+    def update_info(cls, *args, **kwargs):
         return cls(*args, **kwargs)

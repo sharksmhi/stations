@@ -42,7 +42,7 @@ class SweRef99tmValidator(Validator):
                                      list_obj.get(self.lon_key, boolean=True)):
             report['disapproved'].setdefault(name, (north, east))
 
-        ValidatorLog.append_info(
+        ValidatorLog.update_info(
             list_name=list_obj.get('name'),
             validator_name=self.name,
             info=report,
@@ -106,7 +106,7 @@ class DegreeValidator(Validator):
                         (north, east)
                     )
 
-        ValidatorLog.append_info(
+        ValidatorLog.update_info(
             list_name=list_obj.get('name'),
             validator_name=self.name,
             info=report,
@@ -167,7 +167,7 @@ class DegreeMinuteValidator(Validator):
                         (north, east)
                     )
 
-        ValidatorLog.append_info(
+        ValidatorLog.update_info(
             list_name=list_obj.get('name'),
             validator_name=self.name,
             info=report,
