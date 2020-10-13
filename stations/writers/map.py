@@ -41,6 +41,11 @@ class MapWriter(WriterBase):
         :return:
         """
         self.add_markers_as_cluster(list_obj)
+        if self.station_radius:
+            self.add_radius_circles_as_cluster(list_obj)
+
+        folium.LayerControl().add_to(self.map)
+
         self._write(file_path)
 
     def _write(self, file_path):
@@ -73,10 +78,32 @@ class MapWriter(WriterBase):
                                          icon=folium.Icon(color='blue' if list_name == 'master' else 'red', icon='map-marker'),
                                          tooltip=item.get('statn')[idx] or 'Click me!')
                 marker.add_to(mc)
-
             mc.add_to(fg)
 
-        folium.LayerControl().add_to(self.map)
+    def add_radius_circles_as_cluster(self, list_objs):
+        """
+
+        :param list_objs: dictionary of stations.handler.List
+        :param group_name:
+        :return:
+        """
+        for list_name, item in list_objs.items():
+            fg = self.get_group(name='-'.join([list_name, 'radius']),
+                                add_to_map=True,
+                                return_group=True)
+            mc = MarkerCluster()
+            check = False
+            for idx in range(item.length):
+                if item.has_attribute('radius'):
+                    if item.get('radius')[idx]:
+                        check = True
+                        folium.Circle(tuple([item.get('lat_dd')[idx], item.get('lon_dd')[idx]]),
+                                      radius=int(item.get('radius')[idx]),
+                                      fill_color='#3186cc',
+                                      weight=.5,
+                                      ).add_to(mc)
+            if check:
+                mc.add_to(fg)
 
     def get_group(self, **kwargs):
         """

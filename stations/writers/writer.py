@@ -21,6 +21,7 @@ class WriterBase(ABC):
         self.meta_header = None
         self.map_settings = None
         self.marker_tag_attributes = None
+        self.station_radius = False
 
     def write(self, *args, **kwargs):
         """

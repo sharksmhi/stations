@@ -1,9 +1,9 @@
 description: Export list according to SHARK master format
 writer: !!python/name:stations.writers.shark_master.SharkMasterWriter ''
-default_file_name: 'station.txt'
+default_file_name: station.txt
 attribute_mapping:
-    ID: id
-    ID_GROUP: id_group
+    REG_ID: id
+    REG_ID_GROUP: id_group
     STATION_NAME: statn
     SYNONYM_NAMES: synonyms
     ICES_STATION_NAME: ices_name
@@ -21,8 +21,8 @@ attribute_mapping:
 attribute_constants:
     OUT_OF_BOUNDS_RADIUS: 1200
 header:
-    - ID
-    - ID_GROUP
+    - REG_ID
+    - REG_ID_GROUP
     - STATION_NAME
     - SYNONYM_NAMES
     - ICES_STATION_NAME

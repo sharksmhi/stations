@@ -7,7 +7,7 @@ Created on 2020-09-29 18:41
 
 """
 import pandas as pd
-from stations.utils import decdeg_to_decmin, transform_ref_system
+from stations.utils import decdeg_to_decmin, round_value, transform_ref_system
 from stations.validators.validator import Validator, ValidatorLog
 
 
@@ -87,8 +87,8 @@ class DegreeValidator(Validator):
                 for lat, lon in zip(list_obj.get('lat_sweref99tm', boolean=True),
                                     list_obj.get('lon_sweref99tm', boolean=True)):
                     newla, newlo = transform_ref_system(lat=lat, lon=lon)
-                    new_lat.append(str(round(newla, 6)))
-                    new_lon.append(str(round(newlo, 6)))
+                    new_lat.append(round_value(newla, nr_decimals=4))
+                    new_lon.append(round_value(newlo, nr_decimals=4))
 
                 list_obj.update_attribute_values(self.lat_key, new_lat)
                 list_obj.update_attribute_values(self.lon_key, new_lon)

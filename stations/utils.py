@@ -11,9 +11,10 @@ import numpy as np
 from collections import Mapping
 from datetime import datetime
 from pyproj import Proj, transform
+from decimal import Decimal, ROUND_HALF_UP
 
 
-def decdeg_to_decmin(pos, string_type=True, decimals=3):
+def decdeg_to_decmin(pos, string_type=True, decimals=2):
     """
     :param pos: Position in format DD.dddd (Decimal degrees)
     :param string_type: As str?
@@ -69,6 +70,11 @@ def recursive_dict_update(d, u):
         else:
             d[k] = u[k]
     return d
+
+
+def round_value(value, nr_decimals=2):
+    """"""
+    return str(Decimal(str(value)).quantize(Decimal('%%1.%sf' % nr_decimals % 1), rounding=ROUND_HALF_UP))
 
 
 def transform_ref_system(lat=0.0, lon=0.0,
