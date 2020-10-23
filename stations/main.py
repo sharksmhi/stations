@@ -12,7 +12,7 @@ from stations.handler import MultiList
 
 class App:
     """
-    Keep it clean, keep it tidy:
+    Keep it clean, keep it tidy!
     - read
     - validate
     - write
