@@ -25,6 +25,7 @@ lon_sweref99tm:
     - Position SWEREF99 TM E
 radius: OUT_OF_BOUNDS_RADIUS
 wadep: WADEP
+eucd: EU_CD
 media:
     - MEDIA
     - Media

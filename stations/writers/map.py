@@ -34,9 +34,8 @@ class MapWriter(WriterBase):
         self.html_fmt = get_html_string_format(*(self.marker_tag_attributes.get(key)
                                                  for key in self.marker_tag_attributes))
 
-    def write(self, file_path, list_obj):
+    def add_to_map(self, list_obj):
         """
-        :param file_path:
         :param list_obj:
         :return:
         """
@@ -45,6 +44,14 @@ class MapWriter(WriterBase):
             self.add_radius_circles_as_cluster(list_obj)
 
         folium.LayerControl().add_to(self.map)
+
+    def write(self, file_path, list_obj):
+        """
+        :param file_path:
+        :param list_obj:
+        :return:
+        """
+        self.add_to_map(list_obj)
 
         self._write(file_path)
 
@@ -135,6 +142,11 @@ class MapWriter(WriterBase):
         html_string = self.html_fmt % tuple(args)
         return folium.Html(html_string, script=True)
 
+    @property
+    def html_string(self):
+        return self.map._repr_html_()
+        # return self.map.get_root().render()
+
     @staticmethod
     def get_marker(*args, **kwargs):
         """
@@ -168,4 +180,4 @@ if __name__ == '__main__':
                                          'id': 'id',
                                          'lat_dd': 'lat_dd',
                                          'lon_dd': 'lon_dd'})
-    m._write('map.html')
+    # m._write('map.html')

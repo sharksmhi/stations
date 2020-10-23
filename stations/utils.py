@@ -14,7 +14,7 @@ from pyproj import Proj, transform
 from decimal import Decimal, ROUND_HALF_UP
 
 
-def decdeg_to_decmin(pos, string_type=True, decimals=2):
+def decdeg_to_decmin(pos: (str, float), string_type=True, decimals=2) -> (str, float):
     """
     :param pos: Position in format DD.dddd (Decimal degrees)
     :param string_type: As str?
@@ -37,7 +37,7 @@ def decdeg_to_decmin(pos, string_type=True, decimals=2):
     return output
 
 
-def generate_filepaths(directory, pattern=''):
+def generate_filepaths(directory: str, pattern=''):
     """
     :param directory: str, directory path
     :param pattern: str
@@ -49,15 +49,16 @@ def generate_filepaths(directory, pattern=''):
                 yield os.path.abspath(os.path.join(path, f))
 
 
-def get_now_time(fmt='%Y-%m-%d %H:%M:%S'):
+def get_now_time(fmt: str) -> str:
     """
     :param fmt: str, format to export datetime object
     :return:
     """
+    fmt = fmt or '%Y-%m-%d %H:%M:%S'
     return datetime.now().strftime(fmt)
 
 
-def recursive_dict_update(d, u):
+def recursive_dict_update(d: dict, u: dict) -> dict:
     """ Recursive dictionary update using
     Copied from:
         http://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth
@@ -72,7 +73,7 @@ def recursive_dict_update(d, u):
     return d
 
 
-def round_value(value, nr_decimals=2):
+def round_value(value: (str, int, float), nr_decimals=2) -> str:
     """"""
     return str(Decimal(str(value)).quantize(Decimal('%%1.%sf' % nr_decimals % 1), rounding=ROUND_HALF_UP))
 

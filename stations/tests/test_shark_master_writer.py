@@ -25,7 +25,7 @@ if __name__ == '__main__':
     )
 
     app.read_list(
-        'C:/station_exports/Stationsregistret_validering_gävle_validerad.xlsx',
+        'C:/station_exports/validerade/Stationsregistret_validering_gävle_inre.xlsx',
         sheet_name='Provplatser',
         header=0,
         dtype=str,

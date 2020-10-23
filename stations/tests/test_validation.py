@@ -23,7 +23,7 @@ if __name__ == '__main__':
         list_name='master'
     )
 
-    fid = 'C:\\station_exports\\Stationsregistret_validering_gävle_validerad.xlsx'
+    fid = 'C:\\station_exports\\validerade\\Stationsregistret_validering_gävle_validerad.xlsx'
 
     app.read_list(
         fid,

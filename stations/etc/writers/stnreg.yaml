@@ -9,6 +9,7 @@ attribute_mapping:
     Synonymer: synonyms
     Position SWEREF99 TM N: lat_sweref99tm
     Position SWEREF99 TM E: lon_sweref99tm
+    EU_CD: eucd
     Kommentar: comnt
 attribute_constants:
     Namespace: "http://stationsregister.miljodatasamverkan.se/so/ef/environmentalmonitoringfacility"

@@ -12,6 +12,10 @@ from stations.handler import MultiList
 
 class App:
     """
+    Keep it clean, keep it tidy:
+    - read
+    - validate
+    - write
     """
     def __init__(self, *args, **kwargs):
         self.settings = Settings(**kwargs)
@@ -91,19 +95,19 @@ class App:
 
 if __name__ == '__main__':
     app = App()
-    app.read_list(
-        'C:/Arbetsmapp/config/station.txt',
-        header=0,
-        sep='\t',
-        encoding='cp1252',
-        dtype=str,
-        keep_default_na=False,
-        reader='shark_master',
-        list_name='master',
-    )
+    # app.read_list(
+    #     'C:/Arbetsmapp/config/station.txt',
+    #     header=0,
+    #     sep='\t',
+    #     encoding='cp1252',
+    #     dtype=str,
+    #     keep_default_na=False,
+    #     reader='shark_master',
+    #     list_name='master',
+    # )
 
     new_stations = {
-        'statn': ['Avan centroid', 'Vallviksfjärden centroid'],
+        'statn': ['N Fredriksskansbron'.upper(), 'Vallviksfjärden centroid'],
         'lat_sweref99tm': ['6729995', '6782432'],
         'lon_sweref99tm': ['618965', '620581'],
     }
@@ -116,6 +120,6 @@ if __name__ == '__main__':
 
     app.validate_list('new_stations')
 
-    app.write_list(writer='map', list_names=['master', 'new_stations'])
+    # app.write_list(writer='map', list_names=['master', 'new_stations'])
 
-    # app.write_list(writer='stnreg', list_name='master')
+    app.write_list(writer='stnreg', list_name='new_stations')

@@ -15,6 +15,7 @@ attribute_mapping:
     LONGITUDE_SWEREF99TM: lon_sweref99tm
     OUT_OF_BOUNDS_RADIUS: radius
     WADEP: wadep
+    EU_CD: eucd
     MEDIA: media
     OLD_SHARK_ID: old_id
     COMNT: comnt
@@ -34,6 +35,7 @@ header:
     - LONGITUDE_SWEREF99TM
     - OUT_OF_BOUNDS_RADIUS
     - WADEP
+    - EU_CD
     - MEDIA
     - COMNT
     - OLD_SHARK_ID
