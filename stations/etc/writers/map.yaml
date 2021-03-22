@@ -5,6 +5,7 @@ station_radius: true
 map_settings:
     location: [61.75, 19.45]
     zoom_start: 5
+#    tiles: cartodbdark_matter
     tiles: cartodbpositron
 marker_tag_attributes:
     statn: Station

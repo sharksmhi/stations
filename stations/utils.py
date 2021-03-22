@@ -10,8 +10,30 @@ import os
 import numpy as np
 from collections import Mapping
 from datetime import datetime
-from pyproj import Proj, transform
+from pyproj import Proj, CRS, transform
 from decimal import Decimal, ROUND_HALF_UP
+
+
+def eliminate_empty_rows(df):
+    return df.loc[df.apply(any, axis=1), :].reset_index(drop=True)
+
+
+def decmin_to_decdeg(pos, string_type=True, decimals=4):
+    """
+    :param pos: str, Position in format DDMM.mm (Degrees + decimal minutes)
+    :param string_type: As str?
+    :param decimals: Number of decimals
+    :return: Position in format DD.dddd (Decimal degrees)
+    """
+    pos = float(pos)
+
+    output = np.floor(pos/100.) + (pos % 100)/60.
+    output = round_value(output, nr_decimals=decimals)
+    # output = "%.5f" % output
+    if string_type:
+        return output
+    else:
+        return float(output)
 
 
 def decdeg_to_decmin(pos: (str, float), string_type=True, decimals=2) -> (str, float):
@@ -49,7 +71,7 @@ def generate_filepaths(directory: str, pattern=''):
                 yield os.path.abspath(os.path.join(path, f))
 
 
-def get_now_time(fmt: str) -> str:
+def get_now_time(fmt=None) -> str:
     """
     :param fmt: str, format to export datetime object
     :return:
@@ -91,9 +113,11 @@ def transform_ref_system(lat=0.0, lon=0.0,
     lon = longitude
     To find your EPSG check this website: http://spatialreference.org/ref/epsg/
     """
-    o_proj = Proj("+init=" + out_proj)
-    i_proj = Proj("+init=" + in_proj)
+    # o_proj = Proj("+init=" + out_proj)
+    # i_proj = Proj("+init=" + in_proj)
+    o_proj = CRS(out_proj)
+    i_proj = CRS(in_proj)
 
-    x, y = transform(i_proj, o_proj, float(lon), float(lat))
+    x, y = transform(i_proj, o_proj, float(lon), float(lat), always_xy=True)
 
     return y, x

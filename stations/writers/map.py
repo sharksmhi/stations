@@ -26,8 +26,7 @@ class MapWriter(WriterBase):
     def __init__(self, **kwargs):
         super(MapWriter, self).__init__()
 
-        for key, item in kwargs.items():
-            setattr(self, key, item)
+        self.update_attributes(**kwargs)
 
         self.map = folium.Map(**self.map_settings)
 
@@ -51,6 +50,10 @@ class MapWriter(WriterBase):
         :param list_obj:
         :return:
         """
+        # print(list_obj)
+        # if not isinstance(list_obj, dict):
+        #     list_obj = {list_obj.name: list_obj}
+
         self.add_to_map(list_obj)
 
         self._write(file_path)
@@ -135,17 +138,17 @@ class MapWriter(WriterBase):
         for tag in self.marker_tag_attributes:
             value = item.get(tag)
             if type(value) != str:
-                value = value[list_idx]
+                value = value[list_idx]#.encode(encoding='cp1252').decode()
             else:
                 value = '-'
             args.append(value)
         html_string = self.html_fmt % tuple(args)
+        # print('self.html_fmt', type(self.html_fmt), self.html_fmt)
         return folium.Html(html_string, script=True)
 
     @property
     def html_string(self):
         return self.map._repr_html_()
-        # return self.map.get_root().render()
 
     @staticmethod
     def get_marker(*args, **kwargs):

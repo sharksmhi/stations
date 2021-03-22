@@ -15,8 +15,7 @@ class SharkMasterWriter(WriterBase):
     """
     def __init__(self, *args, **kwargs):
         super(SharkMasterWriter, self).__init__()
-        for key, item in kwargs.items():
-            setattr(self, key, item)
+        self.update_attributes(**kwargs)
 
     def _get_dataframe(self, list_obj):
         """
@@ -27,13 +26,31 @@ class SharkMasterWriter(WriterBase):
 
         for col in self.header:
             lst_key = self.attribute_mapping.get(col)
-            if lst_key and hasattr(list_obj, lst_key):
+            if lst_key and list_obj.has_attribute(lst_key):
                 df[col] = self._set_standard_format(list_obj.get(lst_key), list_obj.meta)
             else:
                 value = self.attribute_constants.get(col) or ''
                 df[col] = [value] * list_obj.length
 
         return df
+
+    @staticmethod
+    def _merge_frames(df_main, df_add):
+        """
+        :param df_main:
+        :param df_add:
+        :return:
+        """
+        boolean = ~df_main['REG_ID'].isin(df_add['REG_ID'].to_list())
+        return df_main.loc[boolean, :].append(df_add).reset_index(drop=True)
+
+    @staticmethod
+    def _sort_frame(df_main):
+        """
+        :param df_main:
+        :return:
+        """
+        df_main.sort_values(by='REG_ID', ascending=True, inplace=True)
 
     @staticmethod
     def _set_standard_format(serie, meta_obj):
@@ -43,8 +60,10 @@ class SharkMasterWriter(WriterBase):
         :return:
         """
         if serie.name == 'synonyms':
-            if 'synonym_separator' in meta_obj:
-                serie = serie.str.replace(';', meta_obj.get('synonym_separator'),  regex=False)
+            # ';' is the standard separator within this python app but with this writer we use '<or>'
+            serie = serie.str.replace(';', '<or>', regex=False)
+            # if 'synonym_separator' in meta_obj:
+            #     serie = serie.str.replace(meta_obj.get('synonym_separator'), '<or>', regex=False)
         return serie
 
     def write(self, file_path, list_obj):
@@ -67,7 +86,9 @@ class SharkMasterWriter(WriterBase):
                 if list_name == 'master':
                     continue
                 df_add = self._get_dataframe(list_obj[list_name])
-                df_main = df_main.append(df_add).reset_index(drop=True)
+                df_main = self._merge_frames(df_main, df_add)
+
+        self._sort_frame(df_main)
 
         self._write(df_main, file_path)
 

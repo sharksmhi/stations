@@ -20,12 +20,13 @@ class Validator(ABC):
     def __init__(self, *args, **kwargs):
         super(Validator, self).__init__()
         self.name = None
+        self.id_key = None
         self.lat_key = None
         self.lon_key = None
         self.fill_in_new_values = None
         self.attributes = None
 
-    def validate(self, list_obj):
+    def validate(self, *args, **kwargs):
         raise NotImplementedError
 
     @staticmethod

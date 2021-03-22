@@ -23,7 +23,7 @@ class ListBase:
     """
     def __init__(self, **kwargs):
         super(ListBase, self).__init__()
-        self.loaded_attributes = []
+        self.loaded_attributes = set()
         self.boolean = True
         self.statn = None
         self.name = None
@@ -49,7 +49,7 @@ class ListBase:
         """
         for key, value in kwargs.items():
             setattr(self, key, value)
-            self.loaded_attributes.append(key)
+            self.loaded_attributes.add(key)
 
     def has_attribute(self, attr):
         """
@@ -60,6 +60,32 @@ class ListBase:
             return True
         else:
             return False
+
+    def has_values(self, attr):
+        """
+        :param attr:
+        :return:
+        """
+        if any(self.get(attr)):
+            return True
+        else:
+            return False
+
+    def reset_boolean(self):
+        self.boolean = True
+
+    def get(self, attr):
+        raise NotImplementedError
+
+    def set_value(self, attr, value, boolean=False):
+        if self.has_attribute(attr):
+            serie = self.get(attr)
+            if boolean:
+                serie[self.boolean] = value
+            else:
+                self.set_attributes(attr=value)
+        else:
+            self.set_attributes(attr=value)
 
 
 class List(ListBase):
@@ -74,11 +100,17 @@ class List(ListBase):
                 item = Meta(**item)
             setattr(self, key, item)
 
-    def get(self, item, boolean=False):
+    def get(self, item, boolean=False, value=False):
         """"""
         if item in self.__dict__.keys():
             if boolean:
-                return self.__getattribute__(item)[self.boolean]
+                if value:
+                    if self.boolean.sum() == 1:
+                        return self.__getattribute__(item)[self.boolean].values[0]
+                    else:
+                        return self.__getattribute__(item)[self.boolean].values
+                else:
+                    return self.__getattribute__(item)[self.boolean]
             else:
                 return self.__getattribute__(item)
         else:

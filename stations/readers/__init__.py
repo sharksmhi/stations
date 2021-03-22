@@ -9,3 +9,4 @@ Created on 2020-09-24 16:27
 from stations.readers.txt import PandasTxtReader
 from stations.readers.yml import yaml_reader
 from stations.readers.xlsx import PandasXlsxReader
+from stations.readers.phyche import PhysicalChemicalExcelReader

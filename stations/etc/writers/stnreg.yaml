@@ -7,6 +7,10 @@ attribute_mapping:
     Namn: statn
     Media: media
     Synonymer: synonyms
+    Position WGS84 Dec N: lat_dd
+    Position WGS84 Dec E: lon_dd
+    Position WGS84 DM N: lat_dm
+    Position WGS84 DM E: lon_dm
     Position SWEREF99 TM N: lat_sweref99tm
     Position SWEREF99 TM E: lon_sweref99tm
     EU_CD: eucd
@@ -50,6 +54,10 @@ header:
     - ÄldreID
     - EU_CD
     - LänsID
+    - Position WGS84 Dec N
+    - Position WGS84 Dec E
+    - Position WGS84 DM N
+    - Position WGS84 DM E
     - Position SWEREF99 TM N
     - Position SWEREF99 TM E
     - Kommentar

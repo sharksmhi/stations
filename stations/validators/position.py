@@ -37,7 +37,7 @@ class PositionValidator(Validator):
         """
         return self.geodataframe.contains(point).any()
 
-    def validate(self, list_obj):
+    def validate(self, list_obj, **kwargs):
         """
         :param list_obj: stations.handler.List
         :return:

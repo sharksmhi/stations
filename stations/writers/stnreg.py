@@ -16,8 +16,7 @@ class StnRegWriter(WriterBase):
     """
     def __init__(self, *args, **kwargs):
         super(StnRegWriter, self).__init__()
-        for key, item in kwargs.items():
-            setattr(self, key, item)
+        self.update_attributes(**kwargs)
 
     def write(self, file_path, list_obj):
         """
@@ -25,6 +24,7 @@ class StnRegWriter(WriterBase):
         :param list_obj: stations.handler.List
         :return:
         """
+        # print('list_obj', list_obj)
         mf = self.get_metaframe()
         df = pd.DataFrame(columns=self.header, index=[])
 

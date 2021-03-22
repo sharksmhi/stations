@@ -9,14 +9,25 @@ id_group:
 statn:
     - STATION_NAME
     - Namn
+    - STATN
 synonyms:
     - SYNONYM_NAMES
     - Synonymer
 ices_name: ICES_STATION_NAME
-lat_dd: LATITUDE_WGS84_SWEREF99_DD
-lon_dd: LONGITUDE_WGS84_SWEREF99_DD
-lat_dm: LAT_DM
-lon_dm: LONG_DM
+lat_dd:
+    - LATITUDE_WGS84_SWEREF99_DD
+    - Position WGS84 Dec N
+lon_dd:
+    - LONGITUDE_WGS84_SWEREF99_DD
+    - Position WGS84 Dec E
+lat_dm:
+    - LAT_DM
+    - LATIT
+    - Position WGS84 DM N
+lon_dm:
+    - LONG_DM
+    - LONGI
+    - Position WGS84 DM E
 lat_sweref99tm:
     - LATITUDE_SWEREF99TM
     - Position SWEREF99 TM N

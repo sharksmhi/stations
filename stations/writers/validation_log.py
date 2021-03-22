@@ -18,8 +18,7 @@ class ValidationWriter(WriterBase, ABC):
     """
     def __init__(self, *args, **kwargs):
         super(ValidationWriter, self).__init__()
-        for key, item in kwargs.items():
-            setattr(self, key, item)
+        self.update_attributes(**kwargs)
 
     @staticmethod
     def write(file_path, log):

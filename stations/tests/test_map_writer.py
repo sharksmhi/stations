@@ -1,13 +1,13 @@
 # Copyright (c) 2020 SMHI, Swedish Meteorological and Hydrological Institute 
 # License: MIT License (see LICENSE.txt or http://opensource.org/licenses/mit).
 """
-Created on 2020-10-05 14:58
+Created on 2020-11-10 11:01
 
 @author: a002028
 
 """
+import time
 from stations.main import App
-from stations.validators.validator import ValidatorLog
 
 
 if __name__ == '__main__':
@@ -19,20 +19,19 @@ if __name__ == '__main__':
         list_name='master'
     )
 
+    # fid = 'C:\\station_exports\\HAL_PAG\\StnReg03_Inmatningsmall_201215.xlsx'
+    # fid = 'C:\\Temp\\DV\\hist_data\\StnReg03_Inmatningsmall.xlsx'
+    fid = 'C:\\station_exports\\PELA_Hogakusten\\StnReg_PELA_Hogakusten.xlsx'
+
     app.read_list(
-        'C:/station_exports/nkp/Stationsregistret_validering.xlsx',
+        fid,
         reader='xlsx',
         list_name='stnreg_import'
     )
 
     app.validate_list('stnreg_import')
 
-    app.write_list(
-        writer='shark_master',
-        list_names=['master', 'stnreg_import'],
-    )
+    app.write_list(writer='map', list_names=['master', 'stnreg_import'])
 
-    app.write_list(
-        writer='validation_log',
-        data=ValidatorLog.log
-    )
+    # start_time = time.time()
+    # print(("{} sec".format(time.time() - start_time)))

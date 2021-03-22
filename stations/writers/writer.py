@@ -23,6 +23,16 @@ class WriterBase(ABC):
         self.marker_tag_attributes = None
         self.station_radius = False
 
+    def update_attributes(self, **kwargs):
+        if 'second_update' in kwargs:
+            for key in kwargs.copy():
+                if not hasattr(self, key):
+                    kwargs.pop(key)
+            print('second_update', kwargs)
+
+        for key, item in kwargs.items():
+            setattr(self, key, item)
+
     def write(self, *args, **kwargs):
         """
         :param args:

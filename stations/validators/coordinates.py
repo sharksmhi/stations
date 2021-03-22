@@ -7,7 +7,7 @@ Created on 2020-09-29 18:41
 
 """
 import pandas as pd
-from stations.utils import decdeg_to_decmin, round_value, transform_ref_system
+from stations.utils import decmin_to_decdeg, decdeg_to_decmin, round_value, transform_ref_system
 from stations.validators.validator import Validator, ValidatorLog
 
 
@@ -20,7 +20,7 @@ class SweRef99tmValidator(Validator):
         for key, item in kwargs.items():
             setattr(self, key, item)
 
-    def validate(self, list_obj):
+    def validate(self, list_obj, **kwargs):
         """
         :param list_obj: stations.handler.List
         :return:
@@ -30,17 +30,24 @@ class SweRef99tmValidator(Validator):
         report = {'approved': {},
                   'disapproved': {}}
 
-        list_obj.boolean = list_obj.get(self.lat_key).ne('') & list_obj.get(self.lon_key).ne('')
-        for name, north, east in zip(list_obj.get('statn', boolean=True),
-                                     list_obj.get(self.lat_key, boolean=True),
-                                     list_obj.get(self.lon_key, boolean=True)):
-            report['approved'].setdefault(name, (north, east))
+        if list_obj.has_values(self.lat_key) and list_obj.has_values(self.lon_key):
+            list_obj.boolean = list_obj.get(self.lat_key).ne('') & list_obj.get(self.lon_key).ne('')
+            for name, north, east in zip(list_obj.get('statn', boolean=True),
+                                         list_obj.get(self.lat_key, boolean=True),
+                                         list_obj.get(self.lon_key, boolean=True)):
+                report['approved'][name] = (north, east)
 
-        list_obj.boolean = list_obj.get(self.lat_key).eq('') | list_obj.get(self.lon_key).eq('')
-        for name, north, east in zip(list_obj.get('statn', boolean=True),
-                                     list_obj.get(self.lat_key, boolean=True),
-                                     list_obj.get(self.lon_key, boolean=True)):
-            report['disapproved'].setdefault(name, (north, east))
+            list_obj.boolean = list_obj.get(self.lat_key).eq('') | list_obj.get(self.lon_key).eq('')
+            for name, north, east in zip(list_obj.get('statn', boolean=True),
+                                         list_obj.get(self.lat_key, boolean=True),
+                                         list_obj.get(self.lon_key, boolean=True)):
+                report['disapproved'][name] = (north, east)
+        else:
+            for name in list_obj.get('statn'):
+                report['disapproved'][name] = False
+
+        if any(report['disapproved']) and self.fill_in_new_values:
+            self._calculate_coord_values(list_obj)
 
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),
@@ -49,6 +56,50 @@ class SweRef99tmValidator(Validator):
         )
 
         self.message(self.__class__.__name__, 'Validation complete\n')
+
+    def _calculate_coord_values(self, list_obj):
+        """
+        :param list_obj:
+        :return:
+        """
+        if not list_obj.has_values(self.lat_key):
+            d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
+                 self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
+            list_obj.set_attributes(**d)
+
+        list_obj.boolean = list_obj.get(self.lat_key).eq('')
+        if not all(list_obj.boolean):
+            return
+
+        if not list_obj.has_values('lat_dd'):
+            if list_obj.has_values('lat_dm'):
+                if not list_obj.has_attribute('lat_dd'):
+                    d = {'lat_dd': pd.Series([''] * list_obj.length).rename('lat_dd'),
+                         'lon_dd': pd.Series([''] * list_obj.length).rename('lon_dd')}
+                    list_obj.set_attributes(**d)
+                new_lat = []
+                new_lon = []
+                for lat, lon in zip(list_obj.get('lat_dm'),
+                                    list_obj.get('lon_dm')):
+                    new_lat.append(decmin_to_decdeg(lat, decimals=6))
+                    new_lon.append(decmin_to_decdeg(lon, decimals=6))
+                list_obj.update_attribute_values('lat_dd', new_lat)
+                list_obj.update_attribute_values('lon_dd', new_lon)
+            else:
+                raise AttributeError('Missing coordinates, in any format! Fix it!')
+
+        new_lat = []
+        new_lon = []
+        for lat, lon in zip(list_obj.get('lat_dd', boolean=True),
+                            list_obj.get('lon_dd', boolean=True)):
+            newla, newlo = transform_ref_system(lat=lat, lon=lon, in_proj='EPSG:4326', out_proj='EPSG:3006')
+            new_lat.append(round_value(newla, nr_decimals=0))
+            new_lon.append(round_value(newlo, nr_decimals=0))
+
+        list_obj.update_attribute_values(self.lat_key, new_lat)
+        list_obj.update_attribute_values(self.lon_key, new_lon)
+
+        self.validate(list_obj)
 
 
 class DegreeValidator(Validator):
@@ -61,7 +112,7 @@ class DegreeValidator(Validator):
         for key, item in kwargs.items():
             setattr(self, key, item)
 
-    def validate(self, list_obj):
+    def validate(self, list_obj, **kwargs):
         """
         :param list_obj: stations.handler.List
         :return:
@@ -125,7 +176,7 @@ class DegreeMinuteValidator(Validator):
         for key, item in kwargs.items():
             setattr(self, key, item)
 
-    def validate(self, list_obj):
+    def validate(self, list_obj, **kwargs):
         """
         :param list_obj: stations.handler.List
         :return:
