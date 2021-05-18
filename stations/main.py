@@ -48,11 +48,11 @@ class App:
         :return:
         """
         if not reader:
-            raise ValueError('Missing reader! Please give one as input (App.read(reader=NAME_OF_READER)')
+            raise ValueError('Missing reader! Please give one as input (App.read_list(reader=NAME_OF_READER)')
         if not list_name:
-            raise ValueError('Missing list_name! Please give one as input (App.read(list_name=NAME_OF_LIST)')
+            raise ValueError('Missing list_name! Please give one as input (App.read_list(list_name=NAME_OF_LIST)')
         if not args:
-            raise ValueError('Missing file path! Please give one as input (App.read(PATH_TO_DATA_SOURCE)')
+            raise ValueError('Missing file path! Please give one as input (App.read_list(PATH_TO_DATA_SOURCE)')
 
         reader_kwargs = self.settings.readers[reader].get('reader_kwargs') or {}
 
@@ -76,7 +76,7 @@ class App:
             attributes=self.settings.attributes,
         )
 
-    def write_list(self, *args, **kwargs):
+    def write_list(self, *args, writer=None, list_name=None, list_names=None, **kwargs):
         """
         :param args: tuple
         :param kwargs: dict.
@@ -88,18 +88,16 @@ class App:
                 file_name
         :return:
         """
-        try:
-            assert 'writer' in kwargs
-        except AssertionError:
-            print('Warning! No writer given, hence no list written')
-            return
+        if not writer:
+            raise ValueError('Missing writer! Please give one as input (App.write_list(writer=NAME_OF_WRITER)')
 
-        writer = self.settings.load_writer(kwargs.get('writer'))
+        writer = self.settings.load_writer(writer)
         writer.update_attributes(second_update=True, **kwargs)
         kwargs.setdefault('default_file_name', writer.default_file_name)
         file_path = self.settings.get_export_file_path(**kwargs)
+        kwargs.pop('file_path')
 
-        lst = kwargs.get('data') or self.lists.select(kwargs.get('list_name') or kwargs.get('list_names'))
+        lst = kwargs.get('data') or self.lists.select(list_name or list_names, for_writer=True)
 
         print('Writing stations to: %s' % file_path)
         writer.write(file_path, lst)

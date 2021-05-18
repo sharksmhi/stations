@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # fid = 'C:\\station_exports\\validerade\\Stationsregistret_validering_gävle_validerad.xlsx'
     # fid = 'C:\\station_exports\\nkp\\Stationsregistret_validering.xlsx'
-    fid = 'C:\\station_exports\\nkp\\StnReg03_Inmatningsmall.xlsx'
+    fid = 'C:\\station_exports\\natvat\\StnReg03_Inmatningsmall.xlsx'
 
     app.read_list(
         fid,

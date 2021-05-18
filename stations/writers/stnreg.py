@@ -21,20 +21,22 @@ class StnRegWriter(WriterBase):
     def write(self, file_path, list_obj):
         """
         :param file_path: str
-        :param list_obj: stations.handler.List
+        :param list_obj: dictionary of stations.handler.List
         :return:
         """
-        # print('list_obj', list_obj)
         mf = self.get_metaframe()
         df = pd.DataFrame(columns=self.header, index=[])
-
-        for col in self.header:
-            lst_key = self.attribute_mapping.get(col)
-            if lst_key and hasattr(list_obj, lst_key):
-                df[col] = list_obj.get(lst_key)
-            else:
-                value = self.attribute_constants.get(col) or ''
-                df[col] = [value] * list_obj.length
+        for list_name, item in list_obj.items():
+            list_df = pd.DataFrame(columns=self.header, index=[])
+            for col in self.header:
+                lst_key = self.attribute_mapping.get(col)
+                if lst_key and hasattr(item, lst_key):
+                    list_df[col] = item.get(lst_key)
+                else:
+                    value = self.attribute_constants.get(col) or ''
+                    list_df[col] = [value] * item.length
+            df = df.append(list_df, ignore_index=True)
+        df = df.reset_index(drop=True)
 
         self._write({'Provplatser': df,
                      'Metadata': mf},

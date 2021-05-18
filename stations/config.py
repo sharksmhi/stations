@@ -137,7 +137,7 @@ class Settings(SettingsBase):
         :return:
         """
         if kwargs.get('file_path'):
-            if os.path.isdir(kwargs.get('file_path')):
+            if os.path.isdir(os.path.dirname(kwargs.get('file_path'))):
                 return kwargs.get('file_path')
             else:
                 raise Warning('file_path given, but it´s not valid.')

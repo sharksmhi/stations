@@ -11,3 +11,4 @@ from stations.writers import *
 from stations.validators import *
 
 from stations import *
+from stations.main import App

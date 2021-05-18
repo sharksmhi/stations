@@ -193,15 +193,19 @@ class MultiList(dict):
         else:
             raise Warning('No list name given')
 
-    def select(self, list_names):
+    def select(self, list_names, for_writer=False):
         """
+        :param for_writer:
         :param list_names: list
         :return:
         """
         if isinstance(list_names, list):
             return {name: self[name] for name in list_names}
         else:
-            return self[list_names]
+            if for_writer:
+                return {list_names: self[list_names]}
+            else:
+                return self[list_names]
 
 
 if __name__ == '__main__':

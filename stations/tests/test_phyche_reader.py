@@ -16,7 +16,8 @@ if __name__ == '__main__':
     file_names = (os.path.join(wd, f) for f in os.listdir(wd))
     list_names_to_validate = []
     for i, fid in enumerate(file_names):
-        name = 'phyche_import_{}'.format(i+1)
+        # name = 'phyche_import_{}'.format(i+1)
+        name = os.path.basename(fid).replace('SMHI_Physical_and_chemical_', '').replace('.xlsx', '')
         app.read_list(
             fid,
             reader='phyche',
@@ -32,8 +33,12 @@ if __name__ == '__main__':
 
     app.validate_list(*list_names_to_validate)
 
+    # app.write_list(
+    #     writer='map',
+    #     list_names=['master', *list_names_to_validate],
+    #     station_radius=False,
+    # )
     app.write_list(
-        writer='map',
-        list_names=['master', *list_names_to_validate],
-        station_radius=False,
+        writer='stnreg',
+        list_names=[*list_names_to_validate],
     )
