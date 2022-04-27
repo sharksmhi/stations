@@ -54,7 +54,7 @@ class ExcelWriter(WriterBase, ABC):
 
         out_dict = self.get_writer_format(log_copy)
         df = pd.DataFrame(out_dict)
-
+        df = df.sort_values(by='statn')
         df.to_excel(
             file_path,
             sheet_name='log',
@@ -72,24 +72,19 @@ class ExcelWriter(WriterBase, ABC):
         """
         out_dict = {
             'delivery': [],
+            'statn': [],
             'validator': [],
-            'disapproved': [],
             'approved': [],
             'comnt': [],
         }
         for delivery, item in data.items():
             for validator_name, item_element in item.items():
-                for key_type, item_type in item_element['disapproved'].items():
-                    out_dict['delivery'].append(delivery)
-                    out_dict['validator'].append(validator_name)
-                    out_dict['disapproved'].append(key_type)
-                    out_dict['approved'].append(None)
-                    out_dict['comnt'].append(item_type)
-                for key_type, item_type in item_element['approved'].items():
-                    out_dict['delivery'].append(delivery)
-                    out_dict['validator'].append(validator_name)
-                    out_dict['approved'].append(key_type)
-                    out_dict['disapproved'].append(None)
-                    out_dict['comnt'].append('Approved')
+                length = len(item_element['approved'])
+                if length:
+                    out_dict['delivery'].extend([delivery] * length)
+                    out_dict['statn'].extend(item_element['statn'])
+                    out_dict['validator'].extend([validator_name] * length)
+                    out_dict['approved'].extend(item_element['approved'])
+                    out_dict['comnt'].extend(item_element['comnt'])
 
         return out_dict

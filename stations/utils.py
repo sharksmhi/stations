@@ -18,6 +18,14 @@ def eliminate_empty_rows(df):
     return df.loc[df.apply(any, axis=1), :].reset_index(drop=True)
 
 
+def distance_between_points_meters(x1, x2, y1, y2):
+    """Distance between two points.
+
+    Example of coordinate reference system in meters: SWEREF99TM
+    """
+    return (((x2 - x1) ** 2) + ((y2 - y1) ** 2)) ** 0.5
+
+
 def decmin_to_decdeg(pos, string_type=True, decimals=4):
     """
     :param pos: str, Position in format DDMM.mm (Degrees + decimal minutes)

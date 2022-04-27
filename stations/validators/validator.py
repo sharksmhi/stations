@@ -58,26 +58,25 @@ class ValidatorLog:
     """
     log = {}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, reset_log=False, list_name=False,
+                 validator_name=None, info=None):
         if any(args):
             if 'etc' not in self.log:
                 self.log['etc'] = []
             for a in args:
                 self.log['etc'].append(a)
 
-        if kwargs.get('reset_log'):
+        if reset_log:
             self.log = {}
 
-        if kwargs.get('list_name'):
-            list_name = kwargs.get('list_name')
-
+        if list_name:
             if list_name not in self.log:
                 self.log[list_name] = {}
 
-            if kwargs.get('validator_name'):
+            if validator_name:
                 self.log[list_name].setdefault(
-                    kwargs.get('validator_name'),
-                    kwargs.get('info')
+                    validator_name,
+                    info
                 )
 
     @classmethod
