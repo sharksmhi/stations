@@ -4,9 +4,9 @@
 Created on 2020-10-01 16:37
 
 @author: a002028
-
 """
 from stations.main import App
+from stations.validators.validator import ValidatorLog
 
 
 if __name__ == '__main__':
@@ -18,9 +18,7 @@ if __name__ == '__main__':
         list_name='master'
     )
 
-    # fid = 'C:\\station_exports\\validerade\\Stationsregistret_validering_gävle_validerad.xlsx'
-    # fid = 'C:\\station_exports\\nkp\\Stationsregistret_validering.xlsx'
-    fid = 'C:\\station_exports\\natvat\\StnReg03_Inmatningsmall.xlsx'
+    fid = r'C:\station_exports\mikael_tst\StnReg03_Inmatningsmall_ZB_SLCT.xlsx'
 
     app.read_list(
         fid,
@@ -28,22 +26,21 @@ if __name__ == '__main__':
         list_name='stnreg_import'
     )
 
-    app.validate_list('stnreg_import')  #, 'master')
+    app.validate_list('stnreg_import')
 
-    # from stations.validators.validator import ValidatorLog
+    app.write_list(
+        writer='xlsx_validation_log',
+        data=ValidatorLog.log
+    )
+
     # app.write_list(
-    #     writer='validation_log',
-    #     data=ValidatorLog.log
-    # )
-    #
-    # app.write_list(
-    #     writer='shark_master',
+    #     writer='map',
     #     list_names=['master', 'stnreg_import'],
     # )
-    app.write_list(
-        writer='stnreg',
-        list_names='stnreg_import',
-    )
+    # app.write_list(
+    #     writer='stnreg',
+    #     list_names='stnreg_import',
+    # )
     # file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     # validator = PositionValidator(file_path=file_path)
     # print('shapes read')

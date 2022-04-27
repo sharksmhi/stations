@@ -20,6 +20,7 @@ class App:
     def __init__(self, *args, **kwargs):
         self.settings = Settings(**kwargs)
         self.lists = MultiList()
+        self.validated = set([])
 
     def validate_list(self, *args, **kwargs):
         """
@@ -36,6 +37,8 @@ class App:
             for validator_name in validator_list:
                 validator = self.settings.load_validator(validator_name)
                 validator.validate(self.lists.select(list_name), master=self.lists.select('master'))
+
+            self.validated.add(validator_name)
 
     def read_list(self, *args, reader=None, list_name=None, **kwargs):
         """
@@ -95,8 +98,7 @@ class App:
         writer.update_attributes(second_update=True, **kwargs)
         kwargs.setdefault('default_file_name', writer.default_file_name)
         file_path = self.settings.get_export_file_path(**kwargs)
-        kwargs.pop('file_path')
-
+        kwargs.pop('file_path', None)
         lst = kwargs.get('data') or self.lists.select(list_name or list_names, for_writer=True)
 
         print('Writing stations to: %s' % file_path)

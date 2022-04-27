@@ -20,8 +20,8 @@ if __name__ == '__main__':
     )
 
     app.read_list(
-        'C:/station_exports/nkp/Stationsregistret_validering.xlsx',
-        reader='xlsx',
+        r'C:\station_exports\mikael_tst\SLV\Stationsregistret_validering.xlsx',
+        reader='stnreg',
         list_name='stnreg_import'
     )
 
@@ -30,9 +30,4 @@ if __name__ == '__main__':
     app.write_list(
         writer='shark_master',
         list_names=['master', 'stnreg_import'],
-    )
-
-    app.write_list(
-        writer='validation_log',
-        data=ValidatorLog.log
     )

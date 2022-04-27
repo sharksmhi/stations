@@ -14,14 +14,21 @@ if __name__ == '__main__':
     print('App loaded')
 
     # fid = 'C:\\station_exports\\Stationsregistret_validering_gävle_validerad.xlsx'
-    fid = 'C:\\station_exports\\nkp\\StnReg03_Inmatningsmall.xlsx'
-
+    # fid = 'C:\\station_exports\\nkp\\StnReg03_Inmatningsmall.xlsx'
+    fid = r'C:\station_exports\StnReg03_Inmatningsmall.xlsx'
+    app.read_list(
+        r'C:\Arbetsmapp\config\station.txt',
+        reader='shark_master',
+        list_name='master'
+    )
     app.read_list(
         fid,
         reader='xlsx',
         list_name='stnreg_import'
     )
+
     app.validate_list('stnreg_import')
+
     app.write_list(
         writer='stnreg',
         list_names='stnreg_import',

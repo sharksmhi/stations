@@ -17,23 +17,29 @@ ices_name: ICES_STATION_NAME
 lat_dd:
     - LATITUDE_WGS84_SWEREF99_DD
     - Position WGS84 Dec N
+    - Position WGS84 Dec N (DD.dddd)
 lon_dd:
     - LONGITUDE_WGS84_SWEREF99_DD
     - Position WGS84 Dec E
+    - Position WGS84 Dec E (DD.dddd)
 lat_dm:
     - LAT_DM
     - LATIT
     - Position WGS84 DM N
+    - Position WGS84 DM N (DDMM.mm)
 lon_dm:
     - LONG_DM
     - LONGI
     - Position WGS84 DM E
+    - Position WGS84 DM E (DDMM.mm)
 lat_sweref99tm:
     - LATITUDE_SWEREF99TM
     - Position SWEREF99 TM N
+    - Position SWEREF99 TM N (xxxxxx)
 lon_sweref99tm:
     - LONGITUDE_SWEREF99TM
     - Position SWEREF99 TM E
+    - Position SWEREF99 TM E (xxxxxx)
 radius: OUT_OF_BOUNDS_RADIUS
 wadep: WADEP
 eucd: EU_CD

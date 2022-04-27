@@ -8,7 +8,7 @@ Created on 2020-10-02 08:56
 """
 from stations.utils import transform_ref_system
 from stations.writers.map import MapWriter
-from stations.validators.position import PositionValidator
+from stations.validators.position import PositionInOceanValidator
 
 
 if __name__ == '__main__':
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     )
 
     file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
-    pos_val = PositionValidator(file_path=file_path)
+    pos_val = PositionInOceanValidator(file_path=file_path)
     # point = Point(621820, 6785813)
     boolean = pos_val.gf['OBJECTID'] == 593
 

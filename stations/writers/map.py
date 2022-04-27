@@ -25,11 +25,8 @@ class MapWriter(WriterBase):
     """
     def __init__(self, **kwargs):
         super(MapWriter, self).__init__()
-
         self.update_attributes(**kwargs)
-
         self.map = folium.Map(**self.map_settings)
-
         self.html_fmt = get_html_string_format(*(self.marker_tag_attributes.get(key)
                                                  for key in self.marker_tag_attributes))
 
@@ -38,9 +35,9 @@ class MapWriter(WriterBase):
         :param list_obj:
         :return:
         """
-        self.add_markers_as_cluster(list_obj)
+        self.add_markers(list_obj)
         if self.station_radius:
-            self.add_radius_circles_as_cluster(list_obj)
+            self.add_radius_circles(list_obj)
 
         folium.LayerControl().add_to(self.map)
 
@@ -53,7 +50,6 @@ class MapWriter(WriterBase):
         # print(list_obj)
         # if not isinstance(list_obj, dict):
         #     list_obj = {list_obj.name: list_obj}
-
         self.add_to_map(list_obj)
 
         self._write(file_path)
@@ -65,19 +61,14 @@ class MapWriter(WriterBase):
         """
         self.map.save(file_path)
 
-    def add_markers_as_cluster(self, list_objs):
-        """
-
-        :param list_objs: dictionary of stations.handler.List
-        :param group_name:
-        :return:
-        """
+    def add_markers(self, list_objs):
+        """"""
         for list_name, item in list_objs.items():
             fg = self.get_group(name=list_name,
                                 add_to_map=True,
                                 return_group=True)
 
-            mc = MarkerCluster()
+            mc = MarkerCluster() if (self.new_stations_as_cluster or list_name == 'master') else None
 
             for idx in range(item.length):
                 html_obj = self.get_html_object(item, idx)
@@ -87,32 +78,39 @@ class MapWriter(WriterBase):
                                          popup=popup,
                                          icon=folium.Icon(color='blue' if list_name == 'master' else 'red', icon='map-marker'),
                                          tooltip=item.get('statn')[idx] or 'Click me!')
-                marker.add_to(mc)
-            mc.add_to(fg)
 
-    def add_radius_circles_as_cluster(self, list_objs):
-        """
+                if self.new_stations_as_cluster or list_name == 'master':
+                    marker.add_to(mc)
+                else:
+                    marker.add_to(fg)
 
-        :param list_objs: dictionary of stations.handler.List
-        :param group_name:
-        :return:
-        """
+            if self.new_stations_as_cluster or list_name == 'master':
+                mc.add_to(fg)
+
+    def add_radius_circles(self, list_objs):
+        """"""
         for list_name, item in list_objs.items():
             fg = self.get_group(name='-'.join([list_name, 'radius']),
                                 add_to_map=True,
                                 return_group=True)
-            mc = MarkerCluster()
+
+            mc = MarkerCluster() if (self.new_stations_as_cluster or list_name == 'master') else None
+
             check = False
             for idx in range(item.length):
                 if item.has_attribute('radius'):
                     if item.get('radius')[idx]:
                         check = True
-                        folium.Circle(tuple([item.get('lat_dd')[idx], item.get('lon_dd')[idx]]),
-                                      radius=int(item.get('radius')[idx]),
-                                      fill_color='#3186cc',
-                                      weight=.5,
-                                      ).add_to(mc)
-            if check:
+                        circle = folium.Circle(tuple([item.get('lat_dd')[idx], item.get('lon_dd')[idx]]),
+                                               radius=int(item.get('radius')[idx]),
+                                               fill_color='#3186cc',
+                                               weight=.5,
+                                               )
+                        if self.new_stations_as_cluster or list_name == 'master':
+                            circle.add_to(mc)
+                        else:
+                            circle.add_to(fg)
+            if check and (self.new_stations_as_cluster or list_name == 'master'):
                 mc.add_to(fg)
 
     def get_group(self, **kwargs):

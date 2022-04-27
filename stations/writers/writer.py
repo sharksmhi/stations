@@ -22,6 +22,7 @@ class WriterBase(ABC):
         self.map_settings = None
         self.marker_tag_attributes = None
         self.station_radius = False
+        self.new_stations_as_cluster = True
 
     def update_attributes(self, **kwargs):
         if 'second_update' in kwargs:

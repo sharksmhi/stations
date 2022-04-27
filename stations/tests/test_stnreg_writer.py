@@ -13,7 +13,7 @@ if __name__ == '__main__':
     app = App()
 
     app.read_list(
-        'C:\\station_exports\\uppdateringar\\nya_synonyms.txt',
+        r'C:\Arbetsmapp\config\station.txt',
         reader='shark_master',
         list_name='master'
     )
