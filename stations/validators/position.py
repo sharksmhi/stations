@@ -65,7 +65,8 @@ class MatchMasterListValidator(Validator):
         """
         self._setup_masterframe(kwargs.get('master'))
 
-        self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
+        self.message(self.__class__.__name__,
+                     f'Running validation on list: {list_obj.name}')
         report = {
             'statn': [],
             'approved': [],
@@ -78,10 +79,10 @@ class MatchMasterListValidator(Validator):
             validation_fail = self.point_within_radius(point)
             report['statn'].append(name)
             if validation_fail:
-                report['approved'].append('No')
+                report['approved'].append('Failed')
                 report['comnt'].append(validation_fail)
             else:
-                report['approved'].append('Yes')
+                report['approved'].append('Passed')
                 report['comnt'].append('')
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),
@@ -136,10 +137,10 @@ class PositionInOceanValidator(Validator):
             validation = self.point_in_polygons(point)
             report['statn'].append(name)
             if validation:
-                report['approved'].append('Yes')
+                report['approved'].append('Passed')
                 report['comnt'].append('')
             else:
-                report['approved'].append('No')
+                report['approved'].append('Failed')
                 report['comnt'].append('On land')
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),

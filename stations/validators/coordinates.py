@@ -44,7 +44,7 @@ class SweRef99tmValidator(Validator):
                                          list_obj.get(self.lat_key, boolean=True),
                                          list_obj.get(self.lon_key, boolean=True)):
                 report['statn'].append(name)
-                report['approved'].append('Yes')
+                report['approved'].append('Passed')
                 report['comnt'].append('')
 
             list_obj.boolean = list_obj.get(self.lat_key).eq('') | list_obj.get(self.lon_key).eq('')
@@ -52,14 +52,14 @@ class SweRef99tmValidator(Validator):
                                          list_obj.get(self.lat_key, boolean=True),
                                          list_obj.get(self.lon_key, boolean=True)):
                 report['statn'].append(name)
-                report['approved'].append('No')
+                report['approved'].append('Failed')
                 report['comnt'].append('Missing info')
                 any_disapproved = True
         else:
             any_disapproved = True
             for name in list_obj.get('statn'):
                 report['statn'].append(name)
-                report['approved'].append('No')
+                report['approved'].append('Failed')
                 report['comnt'].append('Missing info')
 
         if any_disapproved and self.fill_in_new_values:
@@ -167,14 +167,14 @@ class DegreeValidator(Validator):
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
                     report['statn'].append(name)
-                    report['approved'].append('Yes')
+                    report['approved'].append('Passed')
                     report['comnt'].append('')
             else:
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
                     report['statn'].append(name)
-                    report['approved'].append('No')
+                    report['approved'].append('Failed')
                     report['comnt'].append('Current settings do not allow '
                                            'us to "fill_in_new_values"')
 
@@ -233,14 +233,14 @@ class DegreeMinuteValidator(Validator):
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
                     report['statn'].append(name)
-                    report['approved'].append('Yes')
+                    report['approved'].append('Passed')
                     report['comnt'].append('')
             else:
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
                     report['statn'].append(name)
-                    report['approved'].append('No')
+                    report['approved'].append('Failed')
                     report['comnt'].append('Current settings do not allow '
                                            'us to "fill_in_new_values"')
 

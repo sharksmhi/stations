@@ -35,13 +35,13 @@ class MandatoryAttributes(Validator):
             report['statn'].append('')
             if list_obj.has_attribute(attr):
                 if list_obj.get(attr).all():
-                    report['approved'].append('Yes')
+                    report['approved'].append('Passed')
                     report['comnt'].append(f'Attribute exists ({attr})')
                 else:
-                    report['approved'].append('No')
+                    report['approved'].append('Failed')
                     report['comnt'].append(f'WARNING! Missing values for attribute: {attr}')
             else:
-                report['approved'].append('No')
+                report['approved'].append('Failed')
                 report['comnt'].append(f'WARNING! Missing attribute: {attr}')
 
         ValidatorLog.update_info(

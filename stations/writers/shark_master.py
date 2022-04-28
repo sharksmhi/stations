@@ -66,7 +66,7 @@ class SharkMasterWriter(WriterBase):
             #     serie = serie.str.replace(meta_obj.get('synonym_separator'), '<or>', regex=False)
         return serie
 
-    def write(self, file_path, list_obj):
+    def write(self, file_path, list_obj, **kwargs):
         """
         :param file_path: str
         :param list_obj: stations.handler.List or dict('list_name'=stations.handler.List)

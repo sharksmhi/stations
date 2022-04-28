@@ -18,7 +18,7 @@ class StnRegWriter(WriterBase):
         super(StnRegWriter, self).__init__()
         self.update_attributes(**kwargs)
 
-    def write(self, file_path, list_obj):
+    def write(self, file_path, list_obj, **kwargs):
         """
         :param file_path: str
         :param list_obj: dictionary of stations.handler.List

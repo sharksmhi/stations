@@ -18,19 +18,20 @@ if __name__ == '__main__':
         list_name='master'
     )
 
-    fid = r'C:\station_exports\mikael_tst\StnReg03_Inmatningsmall_ZB_SLCT.xlsx'
+    fid = r'C:\station_exports\mikael_tst\StnReg03_Inmatningsmall_ZB_ny.xlsx'
 
     app.read_list(
         fid,
         reader='stnreg',
-        list_name='stnreg_import'
+        list_name='ZB_ny'
     )
 
-    app.validate_list('stnreg_import')
+    app.validate_list('ZB_ny')
 
     app.write_list(
         writer='xlsx_validation_log',
-        data=ValidatorLog.log
+        data=ValidatorLog.log,
+        styled=True
     )
 
     # app.write_list(

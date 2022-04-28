@@ -14,6 +14,15 @@ from stations.validators.validator import ValidatorLog
 from stations.writers.writer import WriterBase
 
 
+def cell_border_width(style_object, side='bottom', width='medium'):
+    """Doc."""
+    return ['border-' + side + '-width:' + width for v in style_object]
+
+
+def get_station_break_index(df):
+    return df.drop_duplicates(subset='statn', keep='last').index
+
+
 class ValidationWriter(WriterBase, ABC):
     """
     """
@@ -22,7 +31,7 @@ class ValidationWriter(WriterBase, ABC):
         self.update_attributes(**kwargs)
 
     @staticmethod
-    def write(file_path, log):
+    def write(file_path, log, **kwargs):
         """
         :param file_path: str
         :param list_obj: stations.validators.ValidatorLog.log
@@ -30,9 +39,6 @@ class ValidationWriter(WriterBase, ABC):
         """
         with open(file_path, 'w') as file:
             yaml.safe_dump(log, file, indent=4, default_flow_style=False)
-
-        # with open(file_path, "w", encoding='cp1252') as file:
-        #     json.dump(log, file, indent=4)
 
 
 class ExcelWriter(WriterBase, ABC):
@@ -42,7 +48,7 @@ class ExcelWriter(WriterBase, ABC):
         super(ExcelWriter, self).__init__()
         self.update_attributes(**kwargs)
 
-    def write(self, file_path, data, **kwargs):
+    def write(self, file_path, data, styled=False, **kwargs):
         """Write ValidatorLog.log to excel file.
 
         Args:
@@ -54,12 +60,23 @@ class ExcelWriter(WriterBase, ABC):
 
         out_dict = self.get_writer_format(log_copy)
         df = pd.DataFrame(out_dict)
-        df = df.sort_values(by='statn')
+        df = df.sort_values(by=['statn', 'validator'])
+        if styled:
+            indices = get_station_break_index(df)
+            df = df.style
+            df = df.apply(
+                cell_border_width,
+                side='bottom',
+                width='thin',
+                subset=pd.IndexSlice[indices, :]
+            )
+
         df.to_excel(
             file_path,
             sheet_name='log',
             na_rep='',
             index=None,
+            engine='openpyxl' if styled else None,
         )
 
     def get_writer_format(self, data):
@@ -86,5 +103,4 @@ class ExcelWriter(WriterBase, ABC):
                     out_dict['validator'].extend([validator_name] * length)
                     out_dict['approved'].extend(item_element['approved'])
                     out_dict['comnt'].extend(item_element['comnt'])
-
         return out_dict

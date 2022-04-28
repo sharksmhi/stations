@@ -33,7 +33,7 @@ def decmin_to_decdeg(pos, string_type=True, decimals=4):
     :param decimals: Number of decimals
     :return: Position in format DD.dddd (Decimal degrees)
     """
-    pos = float(pos)
+    pos = float(pos.replace(' ', ''))
 
     output = np.floor(pos/100.) + (pos % 100)/60.
     output = round_value(output, nr_decimals=decimals)
