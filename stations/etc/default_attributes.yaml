@@ -2,10 +2,12 @@ id:
     - ID
     - Id
     - REG_ID
+    - Nationellt provplats-ID
 id_group:
     - ID_GROUP
     - Station Id
     - REG_ID_GROUP
+    - Nationellt övervakningsstations-ID
 statn:
     - STATION_NAME
     - Namn

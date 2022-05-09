@@ -18,28 +18,29 @@ if __name__ == '__main__':
         list_name='master'
     )
 
-    fid = r'C:\station_exports\mikael_tst\StnReg03_Inmatningsmall_ZB_SLCT.xlsx'
+    fid = r'C:\station_exports\mikael_tst\StnReg03_Inmatningsmall_tumlare_all.xlsx'
 
     app.read_list(
         fid,
         reader='stnreg',
-        list_name='stnreg_import'
+        list_name='tumlare_all'
     )
 
-    app.validate_list('stnreg_import')
+    app.validate_list('tumlare_all')
 
     app.write_list(
         writer='xlsx_validation_log',
-        data=ValidatorLog.log
+        data=ValidatorLog.log,
+        styled=True
     )
 
     # app.write_list(
     #     writer='map',
-    #     list_names=['master', 'stnreg_import'],
+    #     list_names=['master', 'tumlare_all'],
     # )
     # app.write_list(
     #     writer='stnreg',
-    #     list_names='stnreg_import',
+    #     list_names='tumlare_all',
     # )
     # file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     # validator = PositionValidator(file_path=file_path)

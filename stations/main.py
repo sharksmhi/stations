@@ -17,13 +17,15 @@ class App:
     - validate
     - write
     """
+
     def __init__(self, *args, **kwargs):
         self.settings = Settings(**kwargs)
         self.lists = MultiList()
         self.validated = set([])
 
-    def validate_list(self, *args, **kwargs):
+    def validate_list(self, *args, validator_list=None, **kwargs):
         """
+        :param validator_list:
         :param args:
             Expects:
                 list_name(s)
@@ -32,11 +34,12 @@ class App:
                 validator_list
         :return:
         """
-        validator_list = kwargs.get('validator_list') or self.settings.validators_sorted
+        validator_list = validator_list or self.settings.validators_sorted
         for list_name in args:
             for validator_name in validator_list:
                 validator = self.settings.load_validator(validator_name)
-                validator.validate(self.lists.select(list_name), master=self.lists.select('master'))
+                validator.validate(self.lists.select(list_name),
+                                   master=self.lists.select('master'))
 
             self.validated.add(validator_name)
 
@@ -51,11 +54,17 @@ class App:
         :return:
         """
         if not reader:
-            raise ValueError('Missing reader! Please give one as input (App.read_list(reader=NAME_OF_READER)')
+            raise ValueError(
+                'Missing reader! Please give one as input '
+                '(App.read_list(reader=NAME_OF_READER)')
         if not list_name:
-            raise ValueError('Missing list_name! Please give one as input (App.read_list(list_name=NAME_OF_LIST)')
+            raise ValueError(
+                'Missing list_name! Please give one as input '
+                '(App.read_list(list_name=NAME_OF_LIST)')
         if not args:
-            raise ValueError('Missing file path! Please give one as input (App.read_list(PATH_TO_DATA_SOURCE)')
+            raise ValueError(
+                'Missing file path! Please give one as input '
+                '(App.read_list(PATH_TO_DATA_SOURCE)')
 
         reader_kwargs = self.settings.readers[reader].get('reader_kwargs') or {}
 
@@ -79,7 +88,8 @@ class App:
             attributes=self.settings.attributes,
         )
 
-    def write_list(self, *args, writer=None, list_name=None, list_names=None, **kwargs):
+    def write_list(self, *args, writer=None, list_name=None, list_names=None,
+                   **kwargs):
         """
         :param args: tuple
         :param kwargs: dict.
@@ -92,17 +102,22 @@ class App:
         :return:
         """
         if not writer:
-            raise ValueError('Missing writer! Please give one as input (App.write_list(writer=NAME_OF_WRITER)')
+            raise ValueError(
+                'Missing writer! Please give one as input '
+                '(App.write_list(writer=NAME_OF_WRITER)')
 
         writer = self.settings.load_writer(writer)
         writer.update_attributes(second_update=True, **kwargs)
         kwargs.setdefault('default_file_name', writer.default_file_name)
         file_path = self.settings.get_export_file_path(**kwargs)
         kwargs.pop('file_path', None)
-        lst = kwargs.get('data') or self.lists.select(list_name or list_names, for_writer=True)
+        if 'data' in kwargs:
+            lst = kwargs.pop('data')
+        else:
+            lst = self.lists.select(list_name or list_names, for_writer=True)
 
         print('Writing stations to: %s' % file_path)
-        writer.write(file_path, lst)
+        writer.write(file_path, lst, **kwargs)
         print('Writer done!')
 
 

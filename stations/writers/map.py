@@ -41,7 +41,7 @@ class MapWriter(WriterBase):
 
         folium.LayerControl().add_to(self.map)
 
-    def write(self, file_path, list_obj):
+    def write(self, file_path, list_obj, **kwargs):
         """
         :param file_path:
         :param list_obj:

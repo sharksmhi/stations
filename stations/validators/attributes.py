@@ -25,17 +25,24 @@ class MandatoryAttributes(Validator):
         """
         assert self.attributes
 
-        report = {'approved': {},
-                  'disapproved': {}}
+        report = {
+            'statn': [],
+            'approved': [],
+            'comnt': []
+        }
 
         for attr in self.attributes:
+            report['statn'].append('')
             if list_obj.has_attribute(attr):
                 if list_obj.get(attr).all():
-                    report['approved'].setdefault(attr, 'No missing values')
+                    report['approved'].append('Passed')
+                    report['comnt'].append(f'Attribute exists ({attr})')
                 else:
-                    report['disapproved'].setdefault(attr, 'WARNING! Missing values')
+                    report['approved'].append('Failed')
+                    report['comnt'].append(f'WARNING! Missing values for attribute: {attr}')
             else:
-                report['disapproved'].setdefault(attr, 'WARNING! Missing attribute')
+                report['approved'].append('Failed')
+                report['comnt'].append(f'WARNING! Missing attribute: {attr}')
 
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),
@@ -70,8 +77,10 @@ class MasterAttributes(Validator):
 
         list_master = kwargs.get('master')
 
-        report = {'approved': {},
-                  'disapproved': {}}
+        report = {
+            'approved': {},
+            'comnt': {}
+        }
 
         if list_obj.has_values(self.id_key):
             list_obj.boolean = list_obj.get(self.id_key).ne('')

@@ -7,7 +7,12 @@ Created on 2020-09-29 18:41
 
 """
 import pandas as pd
-from stations.utils import decmin_to_decdeg, decdeg_to_decmin, round_value, transform_ref_system
+from stations.utils import (
+    decmin_to_decdeg,
+    decdeg_to_decmin,
+    round_value,
+    transform_ref_system
+)
 from stations.validators.validator import Validator, ValidatorLog
 
 
@@ -27,26 +32,37 @@ class SweRef99tmValidator(Validator):
         """
         self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
 
-        report = {'approved': {},
-                  'disapproved': {}}
-
+        report = {
+            'statn': [],
+            'approved': [],
+            'comnt': []
+        }
+        any_disapproved = False
         if list_obj.has_values(self.lat_key) and list_obj.has_values(self.lon_key):
             list_obj.boolean = list_obj.get(self.lat_key).ne('') & list_obj.get(self.lon_key).ne('')
             for name, north, east in zip(list_obj.get('statn', boolean=True),
                                          list_obj.get(self.lat_key, boolean=True),
                                          list_obj.get(self.lon_key, boolean=True)):
-                report['approved'][name] = (north, east)
+                report['statn'].append(name)
+                report['approved'].append('Passed')
+                report['comnt'].append('')
 
             list_obj.boolean = list_obj.get(self.lat_key).eq('') | list_obj.get(self.lon_key).eq('')
             for name, north, east in zip(list_obj.get('statn', boolean=True),
                                          list_obj.get(self.lat_key, boolean=True),
                                          list_obj.get(self.lon_key, boolean=True)):
-                report['disapproved'][name] = (north, east)
+                report['statn'].append(name)
+                report['approved'].append('Failed')
+                report['comnt'].append('Missing info')
+                any_disapproved = True
         else:
+            any_disapproved = True
             for name in list_obj.get('statn'):
-                report['disapproved'][name] = False
+                report['statn'].append(name)
+                report['approved'].append('Failed')
+                report['comnt'].append('Missing info')
 
-        if any(report['disapproved']) and self.fill_in_new_values:
+        if any_disapproved and self.fill_in_new_values:
             self._calculate_coord_values(list_obj)
 
         ValidatorLog.update_info(
@@ -119,8 +135,11 @@ class DegreeValidator(Validator):
         """
         self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
 
-        report = {'approved': {},
-                  'disapproved': {}}
+        report = {
+            'statn': [],
+            'approved': [],
+            'comnt': []
+        }
 
         if not list_obj.has_attribute(self.lat_key):
             d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
@@ -147,15 +166,17 @@ class DegreeValidator(Validator):
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
-                    report['approved'].setdefault(name, (north, east))
+                    report['statn'].append(name)
+                    report['approved'].append('Passed')
+                    report['comnt'].append('')
             else:
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
-                    report['disapproved'].setdefault(
-                        'Current settings do not allow us to "fill_in_new_values" for station: %s' % name,
-                        (north, east)
-                    )
+                    report['statn'].append(name)
+                    report['approved'].append('Failed')
+                    report['comnt'].append('Current settings do not allow '
+                                           'us to "fill_in_new_values"')
 
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),
@@ -183,19 +204,27 @@ class DegreeMinuteValidator(Validator):
         """
         self.message(self.__class__.__name__, 'Running validation on list: %s' % list_obj.name)
 
-        report = {'approved': {},
-                  'disapproved': {}}
+        report = {
+            'statn': [],
+            'approved': [],
+            'comnt': []
+        }
 
         if not list_obj.has_attribute(self.lat_key):
             d = {self.lat_key: pd.Series([''] * list_obj.length).rename(self.lat_key),
                  self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
             list_obj.set_attributes(**d)
 
-            report['approved'].setdefault('Appended new attributes (lat_dm, lon_dm)', True)
+        list_obj.boolean = list_obj.get(self.lat_key).str.contains('°')
+        if list_obj.boolean.any():
+            new_lat = [p.replace('°', '').replace('N', '')
+                       for p in list_obj.get(self.lat_key, boolean=True)]
+            new_lon = [p.replace('°', '').replace('E', '')
+                       for p in list_obj.get(self.lon_key, boolean=True)]
+            list_obj.update_attribute_values(self.lat_key, new_lat)
+            list_obj.update_attribute_values(self.lon_key, new_lon)
 
-        if all(list_obj.get(self.lat_key)):
-            report['approved'].setdefault('All good! Assuming these are converted from master-sweref coordinates', True)
-        else:
+        if not all(list_obj.get(self.lat_key)):
             list_obj.boolean = list_obj.get(self.lat_key).eq('')
 
             if self.fill_in_new_values:
@@ -208,15 +237,17 @@ class DegreeMinuteValidator(Validator):
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
-                    report['approved'].setdefault(name, (north, east))
+                    report['statn'].append(name)
+                    report['approved'].append('Passed')
+                    report['comnt'].append('')
             else:
                 for name, north, east in zip(list_obj.get('statn', boolean=True),
                                              list_obj.get(self.lat_key, boolean=True),
                                              list_obj.get(self.lon_key, boolean=True)):
-                    report['disapproved'].setdefault(
-                        'Current settings do not allow us to "fill_in_new_values" for station: %s' % name,
-                        (north, east)
-                    )
+                    report['statn'].append(name)
+                    report['approved'].append('Failed')
+                    report['comnt'].append('Current settings do not allow '
+                                           'us to "fill_in_new_values"')
 
         ValidatorLog.update_info(
             list_name=list_obj.get('name'),
