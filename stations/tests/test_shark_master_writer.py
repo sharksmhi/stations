@@ -20,7 +20,7 @@ if __name__ == '__main__':
     )
 
     app.read_list(
-        r'C:\station_exports\mikael_tst\SLV\Stationsregistret_validering.xlsx',
+        r'C:\station_exports\mikael_tst\StnReg3Verifiering.xlsx',
         reader='stnreg',
         list_name='stnreg_import'
     )

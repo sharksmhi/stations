@@ -111,8 +111,10 @@ class App:
         kwargs.setdefault('default_file_name', writer.default_file_name)
         file_path = self.settings.get_export_file_path(**kwargs)
         kwargs.pop('file_path', None)
-        lst = kwargs.pop('data') or self.lists.select(list_name or list_names,
-                                                      for_writer=True)
+        if 'data' in kwargs:
+            lst = kwargs.pop('data')
+        else:
+            lst = self.lists.select(list_name or list_names, for_writer=True)
 
         print('Writing stations to: %s' % file_path)
         writer.write(file_path, lst, **kwargs)

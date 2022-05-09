@@ -215,11 +215,16 @@ class DegreeMinuteValidator(Validator):
                  self.lon_key: pd.Series([''] * list_obj.length).rename(self.lon_key)}
             list_obj.set_attributes(**d)
 
-            # report['approved'].setdefault('Appended new attributes (lat_dm, lon_dm)', True)
+        list_obj.boolean = list_obj.get(self.lat_key).str.contains('°')
+        if list_obj.boolean.any():
+            new_lat = [p.replace('°', '').replace('N', '')
+                       for p in list_obj.get(self.lat_key, boolean=True)]
+            new_lon = [p.replace('°', '').replace('E', '')
+                       for p in list_obj.get(self.lon_key, boolean=True)]
+            list_obj.update_attribute_values(self.lat_key, new_lat)
+            list_obj.update_attribute_values(self.lon_key, new_lon)
 
         if not all(list_obj.get(self.lat_key)):
-            # report['approved'].setdefault('All good! Assuming these are converted from master-sweref coordinates', True)
-        # else:
             list_obj.boolean = list_obj.get(self.lat_key).eq('')
 
             if self.fill_in_new_values:
