@@ -2,8 +2,8 @@ description: Export list according to the Swedish National Station Register form
 writer: !!python/name:stations.writers.stnreg.StnRegWriter ''
 default_file_name: 'station_list_stnreg.xlsx'
 attribute_mapping:
-    Id: id
-    Station Id: id_group
+    Nationellt provplats-ID: id
+    Nationellt övervakningsstations-ID: id_group
     Namn: statn
     Media: media
     Synonymer: synonyms
@@ -13,10 +13,9 @@ attribute_mapping:
     Position WGS84 DM E: lon_dm
     Position SWEREF99 TM N: lat_sweref99tm
     Position SWEREF99 TM E: lon_sweref99tm
-    EU_CD: eucd
+    EuCd: eucd
     Kommentar: comnt
 attribute_constants:
-    Namespace: "http://stationsregister.miljodatasamverkan.se/so/ef/environmentalmonitoringfacility"
     Aktiv: SANT
     Hemlig: FALSKT
     Forcera: ''
@@ -26,19 +25,24 @@ attribute_constants:
     Användande datavärdskap: ''
     Valideringsdatum: ''
     Uppdateringsdatum: ''
-    ÄldreID: ''
-    EU_CD: ''
-    LänsID: ''
+    ÄldreId: ''
+    EuCd: ''
+    LänsId: ''
     Ansvarig: Naturvårdsverket och Havs- och vattenmyndigheten
     System: Stationsregistret
     Datum: ''
     Koordinatsystem (plan): SWEREF 99 TM
     Användare: smhi
+    Position SWEREF99 N: ''
+    Position SWEREF99 E: ''
     Kommentar: ''
+    "*Senast ändrad": ''
+    "*UUID": ''
+    "*URI": ''
+    "*Web URI": ''
 header:
-    - Namespace
-    - Id
-    - Station Id
+    - Nationellt provplats-ID
+    - Nationellt övervakningsstations-ID
     - Aktiv
     - Hemlig
     - Forcera
@@ -51,20 +55,24 @@ header:
     - Valideringsdatum
     - Uppdateringsdatum
     - Synonymer
-    - ÄldreID
-    - EU_CD
-    - LänsID
+    - ÄldreId
+    - EuCd
+    - LänsId
+    - Position SWEREF99 TM N
+    - Position SWEREF99 TM E
+    - Position SWEREF99 N
+    - Position SWEREF99 E
     - Position WGS84 Dec N
     - Position WGS84 Dec E
     - Position WGS84 DM N
     - Position WGS84 DM E
-    - Position SWEREF99 TM N
-    - Position SWEREF99 TM E
     - Kommentar
+    - "*Senast ändrad"
+    - "*UUID"
+    - "*URI"
+    - "*Web URI"
 meta_header:
     - Ansvarig
     - System
     - Datum
-    - Koordinatsystem (plan)
-    - Användare
-    - Kommentar
+    - Koordinatsystem
