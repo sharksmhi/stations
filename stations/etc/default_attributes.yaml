@@ -42,7 +42,9 @@ lon_sweref99tm:
     - LONGITUDE_SWEREF99TM
     - Position SWEREF99 TM E
     - Position SWEREF99 TM E (xxxxxx)
-radius: OUT_OF_BOUNDS_RADIUS
+radius:
+    - OUT_OF_BOUNDS_RADIUS
+    - Radie (m)
 wadep: WADEP
 eucd: EU_CD
 media:

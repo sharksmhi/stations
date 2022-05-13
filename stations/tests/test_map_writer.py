@@ -33,8 +33,7 @@ if __name__ == '__main__':
     # Write master and new list to map
     app.write_list(
         writer='map',
-        list_names=['stnreg_import'],
-        # list_names=['master', 'stnreg_import'],
+        # list_names=['stnreg_import'],
+        list_names=['master', 'stnreg_import'],
         new_stations_as_cluster=False,
     )
-
