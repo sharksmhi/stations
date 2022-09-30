@@ -20,7 +20,7 @@ if __name__ == '__main__':
     )
 
     # Read register-template to check delivery stations
-    fid = r'C:\station_exports\pos_on_land\stationer_land_kanske.xlsx'
+    fid = r'C:\Utveckling\TESTING\fb_btl_join\punkter.xlsx'
     app.read_list(
         fid,
         reader='stnreg',
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # Write master and new list to map
     app.write_list(
         writer='map',
-        # list_names=['stnreg_import'],
-        list_names=['master', 'stnreg_import'],
+        list_names=['stnreg_import'],
+        # list_names=['master', 'stnreg_import'],
         new_stations_as_cluster=False,
     )

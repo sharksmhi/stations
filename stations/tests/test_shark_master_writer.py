@@ -20,7 +20,7 @@ if __name__ == '__main__':
     )
 
     app.read_list(
-        r'C:\Utveckling\TESTING\smhi_stationer\StnReg11Verifiering.xlsx',
+        r'C:\station_exports\natvat\StnReg20Verifiering.xlsx',
         reader='stnreg',
         list_name='stnreg_import'
     )

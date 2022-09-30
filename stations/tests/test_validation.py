@@ -18,21 +18,21 @@ if __name__ == '__main__':
         list_name='master'
     )
 
-    fid = r'C:\Utveckling\TESTING\smhi_stationer\StnReg03_Inmatningsmall_smhi - kopia.xlsx'
+    fid = r'C:\station_exports\natvat\StnReg03_Inmatningsmall_2021.xlsx'
 
     app.read_list(
         fid,
         reader='stnreg',
-        list_name='smhi'
+        list_name='natvat'
     )
 
-    app.validate_list('smhi')
+    app.validate_list('natvat')
 
-    app.write_list(
-        writer='xlsx_validation_log',
-        data=ValidatorLog.log,
-        styled=True
-    )
+    # app.write_list(
+    #     writer='xlsx_validation_log',
+    #     data=ValidatorLog.log,
+    #     styled=True
+    # )
 
     # app.write_list(
     #     writer='map',
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # )
     app.write_list(
         writer='stnreg',
-        list_names='smhi',
+        list_names='natvat',
     )
     # file_path = 'C:/Arbetsmapp/config/sharkweb_shapefiles/Havsomr_SVAR_2016_3c_CP1252.shp'
     # validator = PositionValidator(file_path=file_path)
