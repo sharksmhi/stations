@@ -20,20 +20,32 @@ if __name__ == '__main__':
     )
 
     # Read register-template to check delivery stations
-    fid = r'C:\Utveckling\TESTING\fb_btl_join\punkter.xlsx'
+    #fid = r'C:\Utveckling\TESTING\fb_btl_join\punkter.xlsx'
+    # fid = r"C:\mw\dv\StnReg03_Inmatningsmall.xlsx"
+    # app.read_list(
+    #     fid,
+    #     reader='stnreg',
+    #     list_name='stnreg_import'
+    # )
+
+    fid = r"C:\mw\dv\StnReg03_Inmatningsmall.xlsx"
     app.read_list(
         fid,
         reader='stnreg',
-        list_name='stnreg_import'
+        list_name='test'
     )
 
+
+
     # Validate selected list based on "list_name"
-    app.validate_list('stnreg_import')
+    # app.validate_list('stnreg_import')
 
     # Write master and new list to map
     app.write_list(
         writer='map',
-        list_names=['stnreg_import'],
+        # list_names=['master'],
+        # list_names=['stnreg_import'],
         # list_names=['master', 'stnreg_import'],
+        list_names=['master', 'test'],
         new_stations_as_cluster=False,
     )

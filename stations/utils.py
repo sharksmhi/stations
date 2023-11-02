@@ -8,7 +8,10 @@ Created on 2020-09-25 16:41
 """
 import os
 import numpy as np
-from collections import Mapping
+try:
+    from collections import Mapping
+except ImportError:
+    from typing import Mapping
 from datetime import datetime
 from pyproj import Proj, CRS, transform
 from decimal import Decimal, ROUND_HALF_UP

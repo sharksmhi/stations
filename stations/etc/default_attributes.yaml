@@ -12,6 +12,7 @@ statn:
     - STATION_NAME
     - Namn
     - STATN
+    - reported_station_name
 synonyms:
     - SYNONYM_NAMES
     - Synonymer
@@ -20,10 +21,12 @@ lat_dd:
     - LATITUDE_WGS84_SWEREF99_DD
     - Position WGS84 Dec N
     - Position WGS84 Dec N (DD.dddd)
+    - sample_latitude_dd
 lon_dd:
     - LONGITUDE_WGS84_SWEREF99_DD
     - Position WGS84 Dec E
     - Position WGS84 Dec E (DD.dddd)
+    - sample_longitude_dd
 lat_dm:
     - LAT_DM
     - LATIT

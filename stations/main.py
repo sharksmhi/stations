@@ -6,6 +6,7 @@ Created on 2020-09-24 16:45
 @author: a002028
 
 """
+import pandas as pd
 from stations.config import Settings
 from stations.handler import MultiList
 
@@ -88,6 +89,17 @@ class App:
             attributes=self.settings.attributes,
         )
 
+    def add_list_data(self,
+                      data: pd.DataFrame,
+                      list_name: str):
+        """Adds a pandas dataframe to the list"""
+        # reader = self.settings.load_reader('stnreg')  # Could be any
+        self.lists.append_new_list(
+            name=list_name,
+            data=data,
+            attributes=self.settings.attributes
+        )
+
     def write_list(self, *args, writer=None, list_name=None, list_names=None,
                    **kwargs):
         """
@@ -106,10 +118,13 @@ class App:
                 'Missing writer! Please give one as input '
                 '(App.write_list(writer=NAME_OF_WRITER)')
 
+        file_path = kwargs.pop('file_path', None)
+
         writer = self.settings.load_writer(writer)
         writer.update_attributes(second_update=True, **kwargs)
         kwargs.setdefault('default_file_name', writer.default_file_name)
-        file_path = self.settings.get_export_file_path(**kwargs)
+        if not file_path:
+            file_path = self.settings.get_export_file_path(**kwargs)
         kwargs.pop('file_path', None)
         if 'data' in kwargs:
             lst = kwargs.pop('data')

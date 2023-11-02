@@ -147,6 +147,7 @@ class List(ListBase):
         dictionary = {a: pd.Series(data[key]).rename(a)
                       for key, a in attributes.items() if key in data}
 
+
         self.set_standard_formats(dictionary)
 
         self.set_attributes(**dictionary)
