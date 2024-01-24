@@ -1,9 +1,19 @@
 import logging
 import pathlib
+import sys
+import pandas as pd
+import functools
+from stations import utils
+
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_STATION_FILE_PATH = pathlib.Path(__file__).parent / 'station.txt'
+if getattr(sys, 'frozen', False):
+    THIS_DIR = pathlib.Path(sys.executable).parent
+else:
+    THIS_DIR = pathlib.Path(__file__).parent
+
+DEFAULT_STATION_FILE_PATH = THIS_DIR / 'etc' / 'station.txt'
 
 
 class StationFile:
@@ -16,8 +26,15 @@ class StationFile:
         self._header = []
         self._data = dict()
         self._synonyms = dict()
+        self._df: pd.DataFrame = pd.DataFrame()
 
         self._load_file()
+
+    @property
+    def df(self):
+        if self._df.empty:
+            self._df = pd.read_csv(self._path, encoding=self._encoding, sep='\t')
+        return self._df
 
     @property
     def path(self) -> pathlib.Path:
@@ -134,7 +151,35 @@ class StationFile:
         station_name = self._convert_station_name(station_name)
         return self._data[station_name]['synonym_names']
 
+    @functools.cache
+    def get_closest_station_info(self, lat: str, lon: str):
+        self.df['calc_dist'] = self.df.apply(lambda row,
+                                                    lat=float(lat),
+                                                    lon=float(lon): self._calc_distance(lat, lon, row), axis=1)
+        cdf = self.df[self.df['calc_dist'] == min(self.df['calc_dist'])]
+        if len(cdf) != 1:
+            raise Exception(f'Several closest stations found for pos: {lat}/{lon}')
+        info = dict(zip(cdf.columns, cdf.to_dict(orient='split', index=False)['data'][0]))
+        if not info['OUT_OF_BOUNDS_RADIUS']:
+            info['accepted'] = None
+        elif info['calc_dist'] <= info['OUT_OF_BOUNDS_RADIUS']:
+            info['accepted'] = True
+        else:
+            info['accepted'] = False
+        return info
 
+    def _calc_distance(self, lat: float, lon: float, row: pd.Series):
+        pos1 = lat, lon
+        pos2 = row['LATITUDE_WGS84_SWEREF99_DD'], row['LONGITUDE_WGS84_SWEREF99_DD']
+        return utils.latlon_distance(pos1, pos2)
+    
+    def get_eu_cd_for_station_name(self, station_name: str) -> str:
+        info = self.get_station_info(station_name)
+        if not info:
+            return None
+        return info[self._convert_header_col('EU_CD')]
+
+@functools.cache
 def get_station_object(path: pathlib.Path = DEFAULT_STATION_FILE_PATH) -> "StationFile":
     return StationFile(path)
 

@@ -7,9 +7,16 @@ Created on 2020-09-24 16:16
 
 """
 import os
+import sys
+import pathlib
 from pathlib import Path
 from stations.readers.yml import yaml_reader
 from stations.utils import generate_filepaths, recursive_dict_update
+
+if getattr(sys, 'frozen', False):
+    THIS_DIR = pathlib.Path(sys.executable).parent
+else:
+    THIS_DIR = pathlib.Path(__file__).parent
 
 
 class SettingsBase:
@@ -74,7 +81,8 @@ class Settings(SettingsBase):
     """
     def __init__(self, *args, **kwargs):
         super(Settings, self).__init__()
-        self.base_directory = os.path.dirname(os.path.realpath(__file__))
+        # self.base_directory = os.path.dirname(os.path.realpath(__file__))
+        self.base_directory = THIS_DIR
         etc_path = os.path.join(self.base_directory, 'etc')
         self._load_settings(etc_path)
 
@@ -90,8 +98,11 @@ class Settings(SettingsBase):
         paths = generate_filepaths(etc_path, pattern='.yaml')
         etc_data = {}
         for path in paths:
-            data = yaml_reader(path)
-            etc_data.setdefault(path, data)
+            try:
+                data = yaml_reader(path)
+                etc_data.setdefault(path, data)
+            except: # To handle non settings files in the same directory
+                pass
 
         self.set_attributes(**etc_data)
 

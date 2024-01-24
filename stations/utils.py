@@ -133,3 +133,23 @@ def transform_ref_system(lat=0.0, lon=0.0,
 
     # Returns LAT, LONG   !!!!
     return y, x
+
+
+def latlon_distance(origin, destination):
+    '''
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    '''
+    from math import radians, cos, sin, asin, sqrt
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = list(map(radians, [lon1, lat1, lon2, lat2]))
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2.)**2 + cos(lat1) * cos(lat2) * sin(dlon/2.)**2
+    c = 2 * asin(sqrt(a))
+    # km = 6367 * c
+    km = 6363 * c # Earth radius at around 57 degrees North
+    return km * 1000
